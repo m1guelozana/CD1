@@ -24,18 +24,14 @@ def search():
 
 def protocols():
     dr.driver.find_element(
-      By.XPATH, '''
-      //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:dtProcessoAndamentoResults_data"]/tr[1]/td[5]
-      '''
+      By.XPATH, "//td[contains(text(), 'Cópia de inicial')]"
     ).get(
       'value'
     )
     for row in df.sheet.iter_rows(min_rows=2, values_only=True):
         protocolos = row
         dr.driver.find_element(
-          By.XPATH, '''
-          //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:dtProcessoAndamentoResults_data"]/tr[1]/td[5]
-          '''
+          By.XPATH, "//td[contains(text(), 'Cópia de inicial')]"
         ).send_keys(protocolos)
         dr.driver.find_element(By.XPATH, '//*[@id="btnPesquisar"]').click()
         dr.driver.find_element(
