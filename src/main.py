@@ -23,14 +23,9 @@ def search():
 
 
 def protocols():
-    dr.driver.find_element(
-      By.XPATH, "//td[contains(text(), 'Cópia de inicial')]"
-    ).get(
-      'value'
-    )
     for row in df.sheet.iter_rows(min_rows=2, values_only=True):
         protocolos = row
-        dr.driver.find_element(
+        value = dr.driver.find_element(
           By.XPATH, "//td[contains(text(), 'Cópia de inicial')]"
         ).send_keys(protocolos)
         dr.driver.find_element(By.XPATH, '//*[@id="btnPesquisar"]').click()
@@ -38,15 +33,7 @@ def protocols():
           By.XPATH, '//*[@id="dtProcessoResults:0:btnProcesso"]'
         ).click()
 
-        entry_element = dr.driver.find_element(
-          By.XPATH,
-          '''
-          //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:dtProcessoAndamentoResults_data"]/tr[1]/td[5]
-          '''
-        )
-        entry_value = entry_element.get_attribute('value')
-
-        if entry_value == 'Cópia Inicial':
+        if value == 'Cópia Inicial':
             protocolo_enviado = True
             break
         if not protocolo_enviado:
