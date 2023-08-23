@@ -1,12 +1,15 @@
+# Importações
 from utils.webdriver_chrome import webDriver_chrome
-from utils.xls_reader import xlsReader
 from selenium.webdriver.common.by import By
+import openpyxl as pyxl
+from selenium.webdriver.common.keys import Keys
 
+# Importação do webdriver
 dr = webDriver_chrome()
-df = xlsReader()
 
 
 def login():
+    # Função para realizar o login
     dr.driver.get('https://kroton.elaw.com.br/login.elaw')
     dr.driver.find_element(By.ID, 'username').send_keys('AMiceli2')
     dr.driver.find_element(By.ID, 'password').send_keys('COGN@2023')
@@ -14,6 +17,7 @@ def login():
 
 
 def search():
+    # Função para buscar o elemento de pesquisa
     dr.driver.find_element(
       By.XPATH, '//*[@id="j_id_2d_1"]/ul/li[2]/a'
     ).click()
@@ -22,45 +26,75 @@ def search():
     ).click()
 
 
-def protocols():
-    for row in df.sheet.iter_rows(min_rows=2, values_only=True):
-        protocolos = row
-        value = dr.driver.find_element(
-          By.XPATH, "//td[contains(text(), 'Cópia de inicial')]"
-        ).send_keys(protocolos)
-        dr.driver.find_element(By.XPATH, '//*[@id="btnPesquisar"]').click()
-        dr.driver.find_element(
-          By.XPATH, '//*[@id="dtProcessoResults:0:btnProcesso"]'
-        ).click()
+def workbook_reading():
+    # Função para leitura da tabela, percorrendo os números de processo
+    workbook = pyxl.load_workbook('Elaw.xlsx')
+    worksheet = workbook.active
+    for row in worksheet.iter_rows(min_row=2, values_only=True):
+        numero_processo = row[0]
+        try:
+            campo_busca = dr.driver.find_element(
+              By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+            )
+            campo_busca.clear()
+            campo_busca.send_keys(numero_processo)
 
-        if value == 'Cópia Inicial':
-            protocolo_enviado = True
+            dr.driver.find_element(
+              By.XPATH, '//*[@id="btnPesquisar"]'
+            ).click()
+
+            dr.driver.find_element(
+              By.ID, 'dtProcessoResults:0:btnProcesso'
+            ).click()
+
+            tag_html = dr.driver.find_element(
+              By.XPATH, '''
+              //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:dtProcessoAndamentoResults_data"]/tr[1]/td[5]
+              '''
+            )
+            valor_tag = tag_html.get_attribute('value')
+
+            if valor_tag != 'Cópia Inicial':
+                print(f"Processo: {numero_processo}")
+                dr.driver.find_element(
+                  By.XPATH, '''
+                  //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
+                  '''
+                ).click()
+
+                dr.driver.find_element(
+                  By.ID, 'j_id_2n:j_id_2r_2_d_label'
+                ).click().send_keys('Acompanhamento')
+
+                dr.driver.find_element(
+                  By.ID, 'j_id_2n:txtOcorrenciaAndamento'
+                ).send_keys('Cópia Inicial')
+
+                dr.driver.find_element(
+                  By.ID, 'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label'
+                ).click().send_keys('Inicial', Keys.ENTER)
+
+                dr.driver.find_element(
+                  By.ID, 'j_id_2n:j_id_2r_2_5ni:uploadGedEFile_input'
+                ).click()
+                pass
+            else:
+                continue
+
+        except Exception as e:
+            print(f"Erro ao processar o número de processo: {numero_processo}")
+            print(f"Mensagem de erro: {str(e)}")
             break
-        if not protocolo_enviado:
-            dr.driver.find_element(
-              By.XPATH,
-              '//*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
-            ).click()
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
-            ).send_keys('acompanhamento')
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="j_id_2n:txtOcorrenciaAndamento"]'
-            ).send_keys('Cópia Inicial')
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label"]'
-            ).send_keys('Inicial')
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-            ).click()
 
 
 def main():
     login()
     search()
+    workbook_reading()
 
 
-main()
+if __name__ == '__main__':
+    main()
 
 input('Press Enter to exit...')
 dr.driver.quit()
