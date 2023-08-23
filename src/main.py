@@ -64,10 +64,10 @@ def workbook_reading():
                 ).click()
 
                 dr.driver.find_element(
-                  By.XPATH, 'j_id_2n:j_id_2r_2_d_input'
+                  By.ID, 'j_id_2n:j_id_2r_2_d_input'
                 ).send_keys('Acompanhamento')
                 acompanhamento = dr.driver.find_element(
-                  By.XPATH, 'j_id_2n:j_id_2r_2_d_input'
+                  By.ID, 'j_id_2n:j_id_2r_2_d_input'
                 )
                 acompanhamento_select = Select(acompanhamento)
                 acompanhamento_select.select_by_index(1)
@@ -104,4 +104,4 @@ if __name__ == '__main__':
 
 input('Press Enter to exit...')
 dr.driver.quit()
-print('Driver quited successfully. Press F5 to run again')
+print('Driver quited successfully.')
