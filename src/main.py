@@ -3,6 +3,7 @@ from utils.webdriver_chrome import webDriver_chrome
 from selenium.webdriver.common.by import By
 import openpyxl as pyxl
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 
 # Importação do webdriver
 dr = webDriver_chrome()
@@ -63,8 +64,13 @@ def workbook_reading():
                 ).click()
 
                 dr.driver.find_element(
-                  By.ID, 'j_id_2n:j_id_2r_2_d_label'
-                ).click().send_keys('Acompanhamento')
+                  By.XPATH, 'j_id_2n:j_id_2r_2_d_input'
+                ).send_keys('Acompanhamento')
+                acompanhamento = dr.driver.find_element(
+                  By.XPATH, 'j_id_2n:j_id_2r_2_d_input'
+                )
+                acompanhamento_select = Select(acompanhamento)
+                acompanhamento_select.select_by_index(1)
 
                 dr.driver.find_element(
                   By.ID, 'j_id_2n:txtOcorrenciaAndamento'
