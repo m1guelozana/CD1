@@ -64,10 +64,15 @@ def workbook_reading():
                 ).click()
 
                 dr.driver.find_element(
-                  By.ID, 'j_id_2n:j_id_2r_2_d_input'
+                  By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d"]'
+                ).click()
+                dr.driver.find_element(
+                  By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_filter"]'
                 ).send_keys('Acompanhamento')
                 acompanhamento = dr.driver.find_element(
-                  By.ID, 'j_id_2n:j_id_2r_2_d_input'
+                  By.XPATH, '''
+                  //select[@id="j_id_2n:j_id_2r_2_d_input"]/option[@value="102"]
+                  '''
                 )
                 acompanhamento_select = Select(acompanhamento)
                 acompanhamento_select.select_by_index(1)
