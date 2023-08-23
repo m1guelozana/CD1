@@ -3,7 +3,9 @@ from utils.webdriver_chrome import webDriver_chrome
 from selenium.webdriver.common.by import By
 import openpyxl as pyxl
 from selenium.webdriver.common.keys import Keys
-# from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 # Importação do webdriver
 dr = webDriver_chrome()
@@ -62,23 +64,18 @@ def workbook_reading():
                   //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
                   '''
                 ).click()
+                wait = WebDriverWait(dr.driver, 10)
+                element = wait.until(EC.presence_of_element_located(
+                  (By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]')
+                  ))
+                element.click()
 
-                dr.driver.find_element(
-                  By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
-                ).click()
                 dr.driver.find_element(
                   By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_filter"]'
                 ).send_keys('Acompanhamento', Keys.ENTER)
 
-                # # By.XPATH, '''
-                # //select[@id="j_id_2n:j_id_2r_2_d_input"]/option[@value="102"]
-                # '''
-                # )
-                # acompanhamento_select = Select(acompanhamento)
-                # acompanhamento_select.select_by_index(1)
-
                 dr.driver.find_element(
-                  By.ID, 'j_id_2n:txtOcorrenciaAndamento'
+                  By.XPATH, 'j_id_2n:txtOcorrenciaAndamento'
                 ).send_keys('Cópia Inicial')
 
                 dr.driver.find_element(
