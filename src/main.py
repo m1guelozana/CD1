@@ -22,43 +22,25 @@ def search():
     ).click()
 
 
-def protocols():
-    for row in df.sheet.iter_rows(min_rows=2, values_only=True):
-        protocolos = row
-        value = dr.driver.find_element(
-          By.XPATH, "//td[contains(text(), 'Cópia de inicial')]"
-        ).send_keys(protocolos)
-        dr.driver.find_element(By.XPATH, '//*[@id="btnPesquisar"]').click()
-        dr.driver.find_element(
-          By.XPATH, '//*[@id="dtProcessoResults:0:btnProcesso"]'
-        ).click()
+def verify_protocols(Elaw, td):
+    table = df.load_workbook(Elaw)
+    firs_table = table.worksheets[1]
+    
+    for line in first_table.iter_rows():
+        table_value = line[1].value
+        
+        if table_value == td:
+            continue
+        else:
+            # continue...
+            continue
 
-        if value == 'Cópia Inicial':
-            protocolo_enviado = True
-            break
-        if not protocolo_enviado:
-            dr.driver.find_element(
-              By.XPATH,
-              '//*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
-            ).click()
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
-            ).send_keys('acompanhamento')
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="j_id_2n:txtOcorrenciaAndamento"]'
-            ).send_keys('Cópia Inicial')
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label"]'
-            ).send_keys('Inicial')
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-            ).click()
+    print(f"Realizando procedimento para o protocolo {table_value}")
 
 
 def main():
     login()
     search()
-    protocols()
 
 
 main()
