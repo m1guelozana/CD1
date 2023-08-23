@@ -23,36 +23,21 @@ def search():
 
 
 def protocols():
-    for row in df.sheet.iter_rows(min_rows=2, values_only=True):
-        protocolos = row
-        value = dr.driver.find_element(
-          By.XPATH, "//td[contains(text(), 'Cópia de inicial')]"
-        ).send_keys(protocolos)
-        dr.driver.find_element(By.XPATH, '//*[@id="btnPesquisar"]').click()
-        dr.driver.find_element(
-          By.XPATH, '//*[@id="dtProcessoResults:0:btnProcesso"]'
-        ).click()
+    last_row = df.worksheet.max_row
+    ultimo_processo_verificado = None
+    for row in range(1, last_row+1):
+        numero_processo = str(df.worksheet.cell(row, 1).value)
+        if numero_processo == ultimo_processo_verificado:
+          continue
 
-        if value == 'Cópia Inicial':
-            protocolo_enviado = True
-            break
-        if not protocolo_enviado:
-            dr.driver.find_element(
-              By.XPATH,
-              '//*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
-            ).click()
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
-            ).send_keys('acompanhamento')
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="j_id_2n:txtOcorrenciaAndamento"]'
-            ).send_keys('Cópia Inicial')
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label"]'
-            ).send_keys('Inicial')
-            dr.driver.find_element(
-              By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-            ).click()
+        tag_html = '<td role="gridcell">'
+    
+        if 'Cópia Inicial' in tag_html:
+          continue
+    
+        print(f"Realizanod processo para o número de processo: {numero_processo}")
+        ultimo_processo_verificado = numero_processo
+    
 
 
 def main():
