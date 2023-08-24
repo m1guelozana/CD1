@@ -90,7 +90,7 @@ def workbook_reading():
                 waiter = WebDriverWait(dr.driver, 10)
                 elemental = waiter.until(EC.presence_of_element_located((
                   By.XPATH, '''
-                  //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                  //*[@id="j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label"]
                   '''
                   )))
                 elemental.click()
