@@ -109,12 +109,21 @@ def workbook_reading():
                 pyautogui.press('enter')
                 time.sleep(5)
 
+                dr.driver.find_element(
+                  By.XPATH, '''
+                  //span[contains(@id,'label')]
+                  '''
+                ).click()
                 nome_arquivo = row[4]
 
                 time.sleep(2)
 
                 pyautogui.write(nome_arquivo)
                 pyautogui.press('enter')
+
+                dr.driver.find_element(
+                  By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                ).click()
                 pass
             else:
                 continue
