@@ -75,10 +75,11 @@ def workbook_reading():
                 dr.driver.find_element(
                   By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
                 ).send_keys('Acompanhamento')
-                time.sleep(2)
-                pyautogui.press('enter')
-                pyautogui.press('tab')
                 time.sleep(0.5)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.press('tab')
+                time.sleep(5)
 
                 wait = WebDriverWait(dr.driver, 10)
                 text = wait.until(EC.presence_of_element_located((
@@ -89,7 +90,7 @@ def workbook_reading():
                 text.send_keys('Cópia Inicial')
                 time.sleep(0.5)
                 pyautogui.press('enter')
-                time.sleep(0.5)
+                time.sleep(5)
 
                 wait = WebDriverWait(dr.driver, 10)
                 elemento = wait.until(EC.presence_of_element_located((
@@ -104,16 +105,11 @@ def workbook_reading():
                   //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
                   '''
                 ).send_keys('Inicial', Keys.ARROW_DOWN, Keys.ARROW_DOWN)
-                time.sleep(2)
-                pyautogui.press('enter')
                 time.sleep(0.5)
+                pyautogui.press('enter')
+                time.sleep(5)
 
-                # Original code to click on the upload element
-                upload_element = wait.until(EC.presence_of_element_located((
-                    By.XPATH, '//span[contains(@id,"label")]'
-                )))
                 nome_arquivo = row[4]
-                upload_element.send_keys(nome_arquivo)
 
                 time.sleep(2)
 
