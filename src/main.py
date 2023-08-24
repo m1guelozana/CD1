@@ -109,7 +109,9 @@ def workbook_reading():
                 time.sleep(0.5)
 
                 dr.driver.find_element(
-                  By.XPATH, "//span[contains(@role,'button')]"
+                  By.XPATH, '''
+                  //span[contains(@id,'j_id_2n:j_id_2r_2_5ni:uploadGedEFile_label')]
+                  '''
                 ).click()
 
                 wait = WebDriverWait(dr.driver, 10)
@@ -125,6 +127,22 @@ def workbook_reading():
                 dr.driver.find_element(
                   By.XPATH, "//span[contains(@role,'button')]"
                 ).click()
+
+                iframe_element = dr.driver.find_element(
+                  By.XPATH, '//*[@id="iframeUpload"]'
+                )
+                dr.driver.switch_to.frame(iframe_element)
+
+                # Aguardar a presença do botão de envio do arquivo
+                upload_button = wait.until(EC.presence_of_element_located((
+                  By.XPATH, '//*[@id="uploadDropzone"]/div[2]/button'
+                )))
+
+                # Clicar no botão de envio do arquivo
+                upload_button.click()
+
+                # Voltar para o contexto padrão
+                dr.driver.switch_to.default_content()
                 pass
             else:
                 continue
