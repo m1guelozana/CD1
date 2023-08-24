@@ -110,32 +110,36 @@ def workbook_reading():
 
                 dr.driver.find_element(
                   By.XPATH, '''
-                  //span[contains(@id,'j_id_2n:j_id_2r_2_5ni:uploadGedEFile_label')]
+                  //span[contains(@id,'label')]
                   '''
                 ).click()
 
                 wait = WebDriverWait(dr.driver, 10)
                 upload_element = wait.until(EC.presence_of_element_located((
                   By.XPATH, '''
-                  //*[@id='j_id_2n:j_id_2r_2_5ni:uploadGedEFile_input']
+                  //*[@id="j_id_2n:j_id_2r_2_5ni:uploadGedEFile"]/div[1]/span
                   '''
                 )))
+                nome_arquivo = row[4]
+                upload_element.send_keys(nome_arquivo)
 
-                file_name = row[4]
-                upload_element.send_keys(file_name)
-
-                dr.driver.find_element(
-                  By.XPATH, "//span[contains(@role,'button')]"
-                ).click()
-
+                # Trocar para o frame da aba de upload
                 iframe_element = dr.driver.find_element(
-                  By.XPATH, '//*[@id="iframeUpload"]'
+                    By.XPATH, '//*[@id="iframeUpload"]'
                 )
                 dr.driver.switch_to.frame(iframe_element)
 
+                nome_arquivo_element = dr.driver.find_element(
+                    By.XPATH, '''
+                    //*[@id="uploadDropzone"]/div[2]/input[@type="text"]
+                    '''
+                )
+                nome_arquivo_element.clear()
+                nome_arquivo_element.send_keys(nome_arquivo)
+
                 # Aguardar a presença do botão de envio do arquivo
                 upload_button = wait.until(EC.presence_of_element_located((
-                  By.XPATH, '//*[@id="uploadDropzone"]/div[2]/button'
+                    By.XPATH, '//*[@id="uploadDropzone"]/div[2]/button'
                 )))
 
                 # Clicar no botão de envio do arquivo
