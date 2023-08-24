@@ -1,11 +1,11 @@
 # Importações
-from utils.webdriver_chrome import webDriver_chrome
-from selenium.webdriver.common.by import By
 import openpyxl as pyxl
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
+import pyautogui
+import time
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.webdriver.support.ui import WebDriverWait
+from utils.webdriver_chrome import webDriver_chrome
 
 # Importação do webdriver
 dr = webDriver_chrome()
@@ -71,20 +71,39 @@ def workbook_reading():
                 element.click()
 
                 dr.driver.find_element(
-                  By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_filter"]'
-                ).send_keys('Acompanhamento', Keys.ENTER)
+                  By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
+                ).send_keys('Acompanhamento')
+                time.sleep(2)
+                pyautogui.press('enter')
+                pyautogui.press('tab')
+                time.sleep(0.5)
+
+                wait = WebDriverWait(dr.driver, 10)
+                text = wait.until(EC.presence_of_element_located((
+                  By.XPATH, '''
+                  //textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]
+                  '''
+                )))
+                text.send_keys('Cópia Inicial')
+                time.sleep(0.5)
+
+                waiter = WebDriverWait(dr.driver, 10)
+                elemental = waiter.until(EC.presence_of_element_located((
+                  By.XPATH, '''
+                  //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                  '''
+                  )))
+                elemental.click()
 
                 dr.driver.find_element(
-                  By.XPATH, 'j_id_2n:txtOcorrenciaAndamento'
-                ).send_keys('Cópia Inicial')
+                  By.XPATH, '''
+                  //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
+                  '''
+                ).send_keys('Inicial')
+                time.sleep(2)
+                pyautogui.press('enter')
+                time.sleep(0.5)
 
-                dr.driver.find_element(
-                  By.ID, 'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label'
-                ).click().send_keys('Inicial', Keys.ENTER)
-
-                dr.driver.find_element(
-                  By.ID, 'j_id_2n:j_id_2r_2_5ni:uploadGedEFile_input'
-                ).click()
                 pass
             else:
                 continue
