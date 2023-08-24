@@ -1,10 +1,11 @@
 # Importações
 import openpyxl as pyxl
-import pyautogui
 import time
+import pyautogui
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from utils.webdriver_chrome import webDriver_chrome
 
 # Importação do webdriver
@@ -64,6 +65,7 @@ def workbook_reading():
                   //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
                   '''
                 ).click()
+
                 wait = WebDriverWait(dr.driver, 10)
                 element = wait.until(EC.presence_of_element_located(
                   (By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]')
@@ -86,23 +88,43 @@ def workbook_reading():
                 )))
                 text.send_keys('Cópia Inicial')
                 time.sleep(0.5)
+                pyautogui.press('enter')
+                time.sleep(0.5)
 
-                waiter = WebDriverWait(dr.driver, 10)
-                elemental = waiter.until(EC.presence_of_element_located((
+                wait = WebDriverWait(dr.driver, 10)
+                elemento = wait.until(EC.presence_of_element_located((
                   By.XPATH, '''
-                  //*[@id="j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label"]
+                  //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
                   '''
-                  )))
-                elemental.click()
+                )))
+                elemento.click()
 
                 dr.driver.find_element(
                   By.XPATH, '''
                   //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
                   '''
-                ).send_keys('Inicial')
+                ).send_keys('Inicial', Keys.ARROW_DOWN, Keys.ARROW_DOWN)
                 time.sleep(2)
                 pyautogui.press('enter')
                 time.sleep(0.5)
+
+                dr.driver.find_element(
+                  By.XPATH, "//span[contains(@role,'button')]"
+                ).click()
+
+                wait = WebDriverWait(dr.driver, 10)
+                upload_element = wait.until(EC.presence_of_element_located((
+                  By.XPATH, '''
+                  //*[@id='j_id_2n:j_id_2r_2_5ni:uploadGedEFile_input']
+                  '''
+                )))
+
+                file_name = row[4]
+                upload_element.send_keys(file_name)
+
+                dr.driver.find_element(
+                  By.XPATH, "//span[contains(@role,'button')]"
+                ).click()
                 pass
             else:
                 continue
