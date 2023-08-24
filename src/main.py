@@ -108,45 +108,17 @@ def workbook_reading():
                 pyautogui.press('enter')
                 time.sleep(0.5)
 
-                dr.driver.find_element(
-                  By.XPATH, '''
-                  //span[contains(@id,'label')]
-                  '''
-                ).click()
-
-                wait = WebDriverWait(dr.driver, 10)
+                # Original code to click on the upload element
                 upload_element = wait.until(EC.presence_of_element_located((
-                  By.XPATH, '''
-                  //*[@id="j_id_2n:j_id_2r_2_5ni:uploadGedEFile"]/div[1]/span
-                  '''
+                    By.XPATH, '//span[contains(@id,"label")]'
                 )))
                 nome_arquivo = row[4]
                 upload_element.send_keys(nome_arquivo)
 
-                # Trocar para o frame da aba de upload
-                iframe_element = dr.driver.find_element(
-                    By.XPATH, '//*[@id="iframeUpload"]'
-                )
-                dr.driver.switch_to.frame(iframe_element)
+                time.sleep(2)
 
-                nome_arquivo_element = dr.driver.find_element(
-                    By.XPATH, '''
-                    //*[@id="uploadDropzone"]/div[2]/input[@type="text"]
-                    '''
-                )
-                nome_arquivo_element.clear()
-                nome_arquivo_element.send_keys(nome_arquivo)
-
-                # Aguardar a presença do botão de envio do arquivo
-                upload_button = wait.until(EC.presence_of_element_located((
-                    By.XPATH, '//*[@id="uploadDropzone"]/div[2]/button'
-                )))
-
-                # Clicar no botão de envio do arquivo
-                upload_button.click()
-
-                # Voltar para o contexto padrão
-                dr.driver.switch_to.default_content()
+                pyautogui.write(nome_arquivo)
+                pyautogui.press('enter')
                 pass
             else:
                 continue
