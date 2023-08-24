@@ -124,6 +124,10 @@ def workbook_reading():
                 dr.driver.find_element(
                   By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
                 ).click()
+
+                dr.driver.find_element(
+                  By.XPATH, '//button[@id="btnVoltar"]'
+                ).click()
                 pass
             else:
                 continue
