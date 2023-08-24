@@ -103,7 +103,6 @@ def workbook_reading():
                 time.sleep(2)
                 pyautogui.press('enter')
                 time.sleep(0.5)
-
                 pass
             else:
                 continue
