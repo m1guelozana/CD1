@@ -61,7 +61,7 @@ def workbook_reading():
             soup = BeautifulSoup(html_content, 'html.parser')
             tags = soup.find_all('td')
             for tag in tags:
-                if tag.contents:
+                if tag.contents == 'Cópia Inicial':
                     dr.driver.find_element(
                       By.XPATH, '''
                       //span[@class='ui-button-text ui-c']
