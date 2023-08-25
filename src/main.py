@@ -2,6 +2,8 @@
 import openpyxl as pyxl
 import time
 import pyautogui
+import requests
+from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -34,6 +36,13 @@ def workbook_reading():
     # Função para leitura da tabela, percorrendo os números de processo
     workbook = pyxl.load_workbook('Elaw.xlsx')
     worksheet = workbook.active
+    url = 'https://kroton.elaw.com.br/processoView.elaw'
+    response = requests.get(url)
+    html_content = response.content
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    tags = soup.find_all('<td>')
     for row in worksheet.iter_rows(min_row=2, values_only=True):
         numero_processo = row[0]
         try:
@@ -50,98 +59,90 @@ def workbook_reading():
             dr.driver.find_element(
               By.ID, 'dtProcessoResults:0:btnProcesso'
             ).click()
+            for tag in tags:
+                if tag.contents:
+                    dr.driver.find_element(
+                      By.XPATH, '''
+                      //span[@class='ui-button-text ui-c']
+                      [contains(.,'Go back to Lawsuit')]
+                      '''
+                    ).click()
+                    dr.driver.find_element(
+                        By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+                      ).clear()
+                    break
 
-            tag_html = dr.driver.find_element(
+            print(f"Processo: {numero_processo}")
+            dr.driver.find_element(
               By.XPATH, '''
-              //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:dtProcessoAndamentoResults_data"]/tr[1]/td[5]
+                //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
+                '''
+              ).click()
+
+            wait = WebDriverWait(dr.driver, 10)
+            element = wait.until(EC.presence_of_element_located(
+              (By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]')
+              ))
+            element.click()
+
+            dr.driver.find_element(
+              By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
+            ).send_keys('Acompanhamento')
+            time.sleep(0.5)
+            pyautogui.press('enter')
+            time.sleep(3)
+            pyautogui.press('tab')
+            time.sleep(5)
+
+            wait = WebDriverWait(dr.driver, 10)
+            text = wait.until(EC.presence_of_element_located((
+              By.XPATH, '''
+                //textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]
               '''
-            )
-            valor_tag = tag_html.get_attribute('value')
+            )))
+            text.send_keys('Cópia Inicial')
+            time.sleep(0.5)
+            pyautogui.press('enter')
+            time.sleep(5)
 
-            if valor_tag == 'Cópia Inicial':
-                dr.driver.find_element(
-                    By.XPATH, '//*[@id="btnVoltar"]'
-                ).click()
-                dr.driver.find_element(
-                    By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
-                  ).clear()
-                print("... Passando para próximo processo ...")
-                print(f"... Numero Processo: {numero_processo}")
-                continue
-            else:
-                print(f"Processo: {numero_processo}")
-                dr.driver.find_element(
-                  By.XPATH, '''
-                  //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
-                  '''
-                ).click()
+            wait = WebDriverWait(dr.driver, 10)
+            elemento = wait.until(EC.presence_of_element_located((
+              By.XPATH, '''
+                //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+              '''
+            )))
+            elemento.click()
 
-                wait = WebDriverWait(dr.driver, 10)
-                element = wait.until(EC.presence_of_element_located(
-                  (By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]')
-                  ))
-                element.click()
+            dr.driver.find_element(
+              By.XPATH, '''
+                //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
+                '''
+            ).send_keys('Inicial', Keys.ARROW_DOWN, Keys.ARROW_DOWN)
+            time.sleep(0.5)
+            pyautogui.press('enter')
+            time.sleep(5)
 
-                dr.driver.find_element(
-                  By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
-                ).send_keys('Acompanhamento')
-                time.sleep(0.5)
-                pyautogui.press('enter')
-                time.sleep(3)
-                pyautogui.press('tab')
-                time.sleep(5)
+            dr.driver.find_element(
+              By.XPATH, '''
+                //span[contains(@id,'label')]
+              '''
+              ).click()
+            nome_arquivo = row[4]
 
-                wait = WebDriverWait(dr.driver, 10)
-                text = wait.until(EC.presence_of_element_located((
-                  By.XPATH, '''
-                  //textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]
-                  '''
-                )))
-                text.send_keys('Cópia Inicial')
-                time.sleep(0.5)
-                pyautogui.press('enter')
-                time.sleep(5)
+            time.sleep(2)
 
-                wait = WebDriverWait(dr.driver, 10)
-                elemento = wait.until(EC.presence_of_element_located((
-                  By.XPATH, '''
-                  //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
-                  '''
-                )))
-                elemento.click()
+            pyautogui.write(nome_arquivo)
+            pyautogui.press('enter')
 
-                dr.driver.find_element(
-                  By.XPATH, '''
-                  //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
-                  '''
-                ).send_keys('Inicial', Keys.ARROW_DOWN, Keys.ARROW_DOWN)
-                time.sleep(0.5)
-                pyautogui.press('enter')
-                time.sleep(5)
+            time.sleep(7)
 
-                dr.driver.find_element(
-                  By.XPATH, '''
-                  //span[contains(@id,'label')]
-                  '''
-                ).click()
-                nome_arquivo = row[4]
+            dr.driver.find_element(
+                      By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                    ).click()
 
-                time.sleep(2)
-
-                pyautogui.write(nome_arquivo)
-                pyautogui.press('enter')
-
-                time.sleep(7)
-
-                dr.driver.find_element(
-                  By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                ).click()
-
-                dr.driver.find_element(
-                  By.XPATH, '//button[@id="btnVoltar"]'
-                ).click()
-                pass
-
+            dr.driver.find_element(
+                      By.XPATH, '//button[@id="btnVoltar"]'
+                    ).click()
         except Exception as e:
             print(f"Erro ao processar o número de processo: {numero_processo}")
             print(f"Mensagem de erro: {str(e)}")
