@@ -58,7 +58,17 @@ def workbook_reading():
             )
             valor_tag = tag_html.get_attribute('value')
 
-            if valor_tag != 'Cópia Inicial':
+            if valor_tag == 'Cópia Inicial':
+                dr.driver.find_element(
+                    By.XPATH, '//*[@id="btnVoltar"]'
+                ).click()
+                dr.driver.find_element(
+                    By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+                  ).clear()
+                print("... Passando para próximo processo ...")
+                print(f"... Numero Processo: {numero_processo}")
+                continue
+            else:
                 print(f"Processo: {numero_processo}")
                 dr.driver.find_element(
                   By.XPATH, '''
@@ -121,6 +131,8 @@ def workbook_reading():
                 pyautogui.write(nome_arquivo)
                 pyautogui.press('enter')
 
+                time.sleep(7)
+
                 dr.driver.find_element(
                   By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
                 ).click()
@@ -129,8 +141,6 @@ def workbook_reading():
                   By.XPATH, '//button[@id="btnVoltar"]'
                 ).click()
                 pass
-            else:
-                continue
 
         except Exception as e:
             print(f"Erro ao processar o número de processo: {numero_processo}")
