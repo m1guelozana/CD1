@@ -37,15 +37,10 @@ def workbook_reading():
     workbook = pyxl.load_workbook('Elaw.xlsx')
     worksheet = workbook.active
     url = 'https://kroton.elaw.com.br/processoView.elaw'
-    response = requests.get(url)
-    html_content = response.content
-
-    soup = BeautifulSoup(html_content, 'html.parser')
-
-    tags = soup.find_all('<td>')
     for row in worksheet.iter_rows(min_row=2, values_only=True):
         numero_processo = row[0]
         try:
+            print(f"Processo: {numero_processo}")
             campo_busca = dr.driver.find_element(
               By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
             )
@@ -59,6 +54,12 @@ def workbook_reading():
             dr.driver.find_element(
               By.ID, 'dtProcessoResults:0:btnProcesso'
             ).click()
+
+            response = requests.get(url)
+            html_content = response.content
+
+            soup = BeautifulSoup(html_content, 'html.parser')
+            tags = soup.find_all('td')
             for tag in tags:
                 if tag.contents:
                     dr.driver.find_element(
@@ -72,7 +73,6 @@ def workbook_reading():
                       ).clear()
                     break
 
-            print(f"Processo: {numero_processo}")
             dr.driver.find_element(
               By.XPATH, '''
                 //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
