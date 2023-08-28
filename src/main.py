@@ -132,18 +132,22 @@ def workbook_reading():
                 time.sleep(2)
 
                 pyautogui.write(nome_arquivo)
+                time.sleep(5)
                 pyautogui.press('enter')
-
                 time.sleep(7)
 
                 dr.driver.find_element(
                           By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
                         ).click()
 
-                dr.driver.find_element(
-                          By.XPATH, "//button[contains(@id,'btnVoltar')]"
-                        ).click()
-                    
+                waitoclick = WebDriverWait(dr.driver, 20)
+                bttnclick = waitoclick.until(EC.presence_of_element_located((
+                  By.XPATH, '''
+                    //button[contains(@id,'btnVoltar')]
+                  '''
+                )))
+                bttnclick.click()
+                pass   
         
           
             # time.sleep(5)
