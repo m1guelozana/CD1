@@ -63,8 +63,7 @@ def workbook_reading():
                 print("Cópia Inicial encontrada na página.")
                 dr.driver.find_element(
                       By.XPATH, '''
-                      //span[@class='ui-button-text ui-c']
-                      [contains(.,'Go back to Lawsuit')]
+                      //button[contains(@id,'btnVoltar')]
                       '''
                     ).click()
                 dr.driver.find_element(
