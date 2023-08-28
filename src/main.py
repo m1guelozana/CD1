@@ -141,7 +141,7 @@ def workbook_reading():
                         ).click()
 
                 dr.driver.find_element(
-                          By.XPATH, '//button[@id="btnVoltar"]'
+                          By.XPATH, "//button[contains(@id,'btnVoltar')]"
                         ).click()
                     
         
