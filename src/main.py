@@ -234,8 +234,18 @@ def workbook_reading():
                   
                   df = df.iloc[:-1]
                   
-                  new_file_path = ''
-                  
+                  new_file_path = r'C:\Users\miguel.silva\Python\CD1' 
+                  new_workbook = Workbook()
+                  new_sheet = new_workbook.active
+
+                    # Adicionar os dados do DataFrame ao novo arquivo Excel
+                  for _, row in df.iterrows():
+                          new_sheet.append(row)
+
+                      # Salvar o novo arquivo Excel
+                  new_workbook.save(new_file_path)
+
+                  print('Última linha removida e novo arquivo Excel criado com sucesso.')
           except Exception as e:
                 print(f"Erro ao processar o número de processo: {numero_processo}")
                 print(f"Mensagem de erro: {str(e)}")
