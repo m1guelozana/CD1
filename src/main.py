@@ -3,6 +3,7 @@ import pandas as pd
 import time
 import pyautogui
 import requests
+from onpenpyxl import Workbook
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -35,9 +36,9 @@ def search():
 
 def workbook_reading():
     # Função para leitura da tabela, percorrendo os números de processo
-    workbook = pd.read_excel('Pasta1.xlsx')
-    if 'Número do Processo' in workbook.columns:
-      numero_processos = workbook.loc[workbook['Número do Processo'] == 'Número do Processo']
+    df = pd.read_excel('Pasta1.xlsx')
+    if 'Número do Processo' in df.columns:
+      numero_processos = df.loc[df['Número do Processo'] == 'Número do Processo']
       url = 'https://kroton.elaw.com.br/processoView.elaw'
       for row in worksheet.iter_rows(min_row=2, values_only=True):
           try:
@@ -55,7 +56,7 @@ def workbook_reading():
               dr.driver.find_element(
                 By.ID, 'dtProcessoResults:0:btnProcesso'
               ).click()
-              tipo_processo = workbook.loc[workbook['Evento'] == 'Evento']
+              tipo_processo = df.loc[df['Evento'] == 'Evento']
               
               if tipo_processo == 'Inicial':
                 # Procurar por elementos <td> com o texto "Cópia Inicial"
@@ -127,7 +128,7 @@ def workbook_reading():
                         //span[contains(@id,'label')]
                       '''
                       ).click()
-                    nome_arquivo = workbook.loc[workbook['Documentos'] == 'Documentos']
+                    nome_arquivo = df.loc[df['Documentos'] == 'Documentos']
 
                     time.sleep(2)
 
@@ -172,7 +173,7 @@ def workbook_reading():
                   pyautogui.press('tab')
                   time.sleep(5)
 
-                  tipo_entrada = workbook.loc[workbook['Ação'] == 'Ação']
+                  tipo_entrada = df.loc[df['Ação'] == 'Ação']
                   wait = WebDriverWait(dr.driver, 10)
                   text = wait.until(EC.presence_of_element_located((
                       By.XPATH, '''
@@ -206,7 +207,7 @@ def workbook_reading():
                         //span[contains(@id,'label')]
                       '''
                       ).click()
-                  nome_arquivo = workbook.loc[workbook['Documentos'] == 'Documentos']
+                  nome_arquivo = df.loc[df['Documentos'] == 'Documentos']
 
                   time.sleep(2)
 
@@ -226,8 +227,15 @@ def workbook_reading():
                       '''
                     )))
                   bttnclick.click()
-                except:
-                  print(f'Mensagem error: {Exception}')
+                except Exception as e:
+                  print(f'Mensagem error: {e}')
+                  file_path = 'Pasta1.xlsx'
+                  df = pd.read_excel(file_path)
+                  
+                  df = df.iloc[:-1]
+                  
+                  new_file_path = ''
+                  
           except Exception as e:
                 print(f"Erro ao processar o número de processo: {numero_processo}")
                 print(f"Mensagem de erro: {str(e)}")
