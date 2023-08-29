@@ -149,24 +149,89 @@ def workbook_reading():
                     bttnclick.click()
                     pass   
               if tipo_processo == 'Petições Diversas':
-                pDiversos = dr.driver.find_element(By.XPATH, "//td[contains(text(), 'Petições Diversas')]")
-                if pDiversos:
-                  print("Petições Diversas encontrada na página.")
+                try:
+                  print('Petições Diversas encontradas na página')
+                  dr.driver.find_element(
+                  By.XPATH, '''
+                    //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
+                    '''
+                  ).click()
+
+                  wait = WebDriverWait(dr.driver, 10)
+                  element = wait.until(EC.presence_of_element_located(
+                      (By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]')
+                      ))
+                  element.click()
+
+                  dr.driver.find_element(
+                      By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
+                    ).send_keys('Acompanhamento')
+                  time.sleep(0.5)
+                  pyautogui.press('enter')
+                  time.sleep(3)
+                  pyautogui.press('tab')
+                  time.sleep(5)
+
+                  tipo_entrada = workbook.loc[workbook['Ação'] == 'Ação']
+                  wait = WebDriverWait(dr.driver, 10)
+                  text = wait.until(EC.presence_of_element_located((
+                      By.XPATH, '''
+                        //textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]
+                      '''
+                    )))
+                  text.send_keys(tipo_entrada)
+                  time.sleep(0.5)
+                  pyautogui.press('enter')
+                  time.sleep(5)
+
+                  wait = WebDriverWait(dr.driver, 10)
+                  elemento = wait.until(EC.presence_of_element_located((
+                      By.XPATH, '''
+                        //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                      '''
+                    )))
+                  elemento.click()
+                    
                   dr.driver.find_element(
                       By.XPATH, '''
-                       //button[contains(@id,'btnVoltar')]
+                        //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
                         '''
-                  ).click()
+                    ).send_keys('Petições Diversas', Keys.ARROW_DOWN)
+                  time.sleep(0.5)
+                  pyautogui.press('enter')
+                  time.sleep(5)
+
                   dr.driver.find_element(
-                     By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
-                  ).clear()
-                  continue
-                else:
-                  print("Petições Diversas não encontrada na página.")          
+                      By.XPATH, '''
+                        //span[contains(@id,'label')]
+                      '''
+                      ).click()
+                  nome_arquivo = workbook.loc[workbook['Documentos'] == 'Documentos']
+
+                  time.sleep(2)
+
+                  pyautogui.write(nome_arquivo)
+                  time.sleep(5)
+                  pyautogui.press('enter')
+                  time.sleep(7)
+
+                  dr.driver.find_element(
+                              By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                            ).click()
+
+                  waitoclick = WebDriverWait(dr.driver, 20)
+                  bttnclick = waitoclick.until(EC.presence_of_element_located((
+                      By.XPATH, '''
+                        //button[contains(@id,'btnVoltar')]
+                      '''
+                    )))
+                  bttnclick.click()
+                except:
+                  print(f'Mensagem error: {Exception}')
           except Exception as e:
-              print(f"Erro ao processar o número de processo: {numero_processo}")
-              print(f"Mensagem de erro: {str(e)}")
-              break
+                print(f"Erro ao processar o número de processo: {numero_processo}")
+                print(f"Mensagem de erro: {str(e)}")
+                break
       else: 
         print('Coluna não existente.')
 
