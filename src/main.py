@@ -10,7 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from utils.webdriver_chrome import webDriver_chrome
-import keyboard
+# import keyboard
 
 # Importação do webdriver
 dr = webDriver_chrome()
@@ -42,12 +42,12 @@ def workbook_reading():
       url = 'https://kroton.elaw.com.br/processoView.elaw'
       for row in df.iter_rows(min_row=2, values_only=True):
           try:
-              print(f"Processo: {numero_processo}")
+              print(f"Processo: {numero_processos}")
               campo_busca = dr.driver.find_element(
                 By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
               )
               campo_busca.clear()
-              campo_busca.send_keys(numero_processo)
+              campo_busca.send_keys(numero_processos)
 
               dr.driver.find_element(
                 By.XPATH, '//*[@id="btnPesquisar"]'
@@ -247,7 +247,7 @@ def workbook_reading():
 
                   print('Última linha removida e novo arquivo Excel criado com sucesso.')
           except Exception as e:
-                print(f"Erro ao processar o número de processo: {numero_processo}")
+                print(f"Erro ao processar o número de processo: {numero_processos}")
                 print(f"Mensagem de erro: {str(e)}")
                 break
       else: 
