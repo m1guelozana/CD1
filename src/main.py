@@ -55,212 +55,120 @@ def workbook_reading():
               dr.driver.find_element(
                 By.ID, 'dtProcessoResults:0:btnProcesso'
               ).click()
-                  
-              # Procurar por elementos <td> com o texto "Cópia Inicial"
-              elementos = dr.driver.find_elements(By.XPATH, "//td[contains(text(), 'Cópia Inicial')]" & By.XPATH, "//td[contains(text(), 'Acompanhamento')]")
-              if elementos:
-                  print("Cópia Inicial ou Acompanhamento encontrada na página.")
-                  dr.driver.find_element(
-                        By.XPATH, '''
-                        //button[contains(@id,'btnVoltar')]
-                        '''
-                      ).click()
-                  dr.driver.find_element(
-                      By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
-                    ).clear()
-                  continue
-                                  
-              else:
-                  print("Cópia Inicial ou Acompanhamento não encontrada na página.")
-                  dr.driver.find_element(
-                By.XPATH, '''
-                  //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
-                  '''
-                ).click()
-
-                  wait = WebDriverWait(dr.driver, 10)
-                  element = wait.until(EC.presence_of_element_located(
-                    (By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]')
-                    ))
-                  element.click()
-
-                  dr.driver.find_element(
-                    By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
-                  ).send_keys('Acompanhamento')
-                  time.sleep(0.5)
-                  pyautogui.press('enter')
-                  time.sleep(3)
-                  pyautogui.press('tab')
-                  time.sleep(5)
-
-                  wait = WebDriverWait(dr.driver, 10)
-                  text = wait.until(EC.presence_of_element_located((
-                    By.XPATH, '''
-                      //textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]
+              tipo_processo = workbook.loc[workbook['Evento'] == 'Evento']
+              
+              if tipo_processo == 'Inicial':
+                # Procurar por elementos <td> com o texto "Cópia Inicial"
+                inicial = dr.driver.find_elements(By.XPATH, "//td[contains(text(), 'Cópia Inicial')]")
+                if inicial:
+                    print("Cópia Inicial encontrada na página.")
+                    dr.driver.find_element(
+                          By.XPATH, '''
+                          //button[contains(@id,'btnVoltar')]
+                          '''
+                        ).click()
+                    dr.driver.find_element(
+                        By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+                      ).clear()
+                    continue                
+                else:
+                    print("Cópia Inicial não encontrada na página.")
+                    dr.driver.find_element(
+                  By.XPATH, '''
+                    //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
                     '''
-                  )))
-                  text.send_keys('Cópia Inicial')
-                  time.sleep(0.5)
-                  pyautogui.press('enter')
-                  time.sleep(5)
+                  ).click()
 
-                  wait = WebDriverWait(dr.driver, 10)
-                  elemento = wait.until(EC.presence_of_element_located((
-                    By.XPATH, '''
-                      //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
-                    '''
-                  )))
-                  elemento.click()
+                    wait = WebDriverWait(dr.driver, 10)
+                    element = wait.until(EC.presence_of_element_located(
+                      (By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]')
+                      ))
+                    element.click()
 
-                  dr.driver.find_element(
-                    By.XPATH, '''
-                      //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
+                    dr.driver.find_element(
+                      By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
+                    ).send_keys('Acompanhamento')
+                    time.sleep(0.5)
+                    pyautogui.press('enter')
+                    time.sleep(3)
+                    pyautogui.press('tab')
+                    time.sleep(5)
+
+                    wait = WebDriverWait(dr.driver, 10)
+                    text = wait.until(EC.presence_of_element_located((
+                      By.XPATH, '''
+                        //textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]
                       '''
-                  ).send_keys('Inicial', Keys.ARROW_DOWN, Keys.ARROW_DOWN)
-                  time.sleep(0.5)
-                  pyautogui.press('enter')
-                  time.sleep(5)
+                    )))
+                    text.send_keys('Cópia Inicial')
+                    time.sleep(0.5)
+                    pyautogui.press('enter')
+                    time.sleep(5)
 
+                    wait = WebDriverWait(dr.driver, 10)
+                    elemento = wait.until(EC.presence_of_element_located((
+                      By.XPATH, '''
+                        //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                      '''
+                    )))
+                    elemento.click()
+                    
+                    dr.driver.find_element(
+                      By.XPATH, '''
+                        //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
+                        '''
+                    ).send_keys('Inicial', Keys.ARROW_DOWN, Keys.ARROW_DOWN)
+                    time.sleep(0.5)
+                    pyautogui.press('enter')
+                    time.sleep(5)
+
+                    dr.driver.find_element(
+                      By.XPATH, '''
+                        //span[contains(@id,'label')]
+                      '''
+                      ).click()
+                    nome_arquivo = workbook.loc[workbook['Documentos'] == 'Documentos']
+
+                    time.sleep(2)
+
+                    pyautogui.write(nome_arquivo)
+                    time.sleep(5)
+                    pyautogui.press('enter')
+                    time.sleep(7)
+
+                    dr.driver.find_element(
+                              By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                            ).click()
+
+                    waitoclick = WebDriverWait(dr.driver, 20)
+                    bttnclick = waitoclick.until(EC.presence_of_element_located((
+                      By.XPATH, '''
+                        //button[contains(@id,'btnVoltar')]
+                      '''
+                    )))
+                    bttnclick.click()
+                    pass   
+              if tipo_processo == 'Petições Diversas':
+                pDiversos = dr.driver.find_element(By.XPATH, "//td[contains(text(), 'Petições Diversas')]")
+                if pDiversos:
+                  print("Petições Diversas encontrada na página.")
                   dr.driver.find_element(
-                    By.XPATH, '''
-                      //span[contains(@id,'label')]
-                    '''
-                    ).click()
-                  nome_arquivo = workbook.loc[workbook['Documentos'] == 'Documentos']
-
-                  time.sleep(2)
-
-                  pyautogui.write(nome_arquivo)
-                  time.sleep(5)
-                  pyautogui.press('enter')
-                  time.sleep(7)
-
+                      By.XPATH, '''
+                       //button[contains(@id,'btnVoltar')]
+                        '''
+                  ).click()
                   dr.driver.find_element(
-                            By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                          ).click()
-
-                  waitoclick = WebDriverWait(dr.driver, 20)
-                  bttnclick = waitoclick.until(EC.presence_of_element_located((
-                    By.XPATH, '''
-                      //button[contains(@id,'btnVoltar')]
-                    '''
-                  )))
-                  bttnclick.click()
-                  pass   
-          
-            
-              # time.sleep(5)
-
-              # # Obtenha a URL da página atual
-              # url_atual = dr.driver.current_url
-
-              # # Imprima a URL
-              # print("URL atual do navegador:", url_atual)
-
-              # response = requests.get(url_atual)
-
-              # print(response)
-
-              # html_content = response.content
-
-
-              # soup = BeautifulSoup(html_content, 'html.parser')
-
-              # print(soup)
-
-              # tags = soup.find_all('gridcell')
-
-              # print(tags)
-
-              # for tag in tags:
-              #     if tag.contents == 'Cópia Inicial':
-              #         dr.driver.find_element(
-              #           By.XPATH, '''
-              #           //span[@class='ui-button-text ui-c']
-              #           [contains(.,'Go back to Lawsuit')]
-              #           '''
-              #         ).click()
-              #         dr.driver.find_element(
-              #             By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
-              #           ).clear()
-              #         break
-
-              # dr.driver.find_element(
-              #   By.XPATH, '''
-              #     //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
-              #     '''
-              #   ).click()
-
-              # wait = WebDriverWait(dr.driver, 10)
-              # element = wait.until(EC.presence_of_element_located(
-              #   (By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]')
-              #   ))
-              # element.click()
-
-              # dr.driver.find_element(
-              #   By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
-              # ).send_keys('Acompanhamento')
-              # time.sleep(0.5)
-              # pyautogui.press('enter')
-              # time.sleep(3)
-              # pyautogui.press('tab')
-              # time.sleep(5)
-
-              # wait = WebDriverWait(dr.driver, 10)
-              # text = wait.until(EC.presence_of_element_located((
-              #   By.XPATH, '''
-              #     //textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]
-              #   '''
-              # )))
-              # text.send_keys('Cópia Inicial')
-              # time.sleep(0.5)
-              # pyautogui.press('enter')
-              # time.sleep(5)
-
-              # wait = WebDriverWait(dr.driver, 10)
-              # elemento = wait.until(EC.presence_of_element_located((
-              #   By.XPATH, '''
-              #     //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
-              #   '''
-              # )))
-              # elemento.click()
-
-              # dr.driver.find_element(
-              #   By.XPATH, '''
-              #     //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
-              #     '''
-              # ).send_keys('Inicial', Keys.ARROW_DOWN, Keys.ARROW_DOWN)
-              # time.sleep(0.5)
-              # pyautogui.press('enter')
-              # time.sleep(5)
-
-              # dr.driver.find_element(
-              #   By.XPATH, '''
-              #     //span[contains(@id,'label')]
-              #   '''
-              #   ).click()
-              # nome_arquivo = row[4]
-
-              # time.sleep(2)
-
-              # pyautogui.write(nome_arquivo)
-              # pyautogui.press('enter')
-
-              # time.sleep(7)
-
-              # dr.driver.find_element(
-              #           By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-              #         ).click()
-
-              # dr.driver.find_element(
-              #           By.XPATH, '//button[@id="btnVoltar"]'
-              #         ).click()
+                     By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+                  ).clear()
+                  continue
+                else:
+                  print("Petições Diversas não encontrada na página.")          
           except Exception as e:
               print(f"Erro ao processar o número de processo: {numero_processo}")
               print(f"Mensagem de erro: {str(e)}")
               break
-          else: 
-            print('Coluna não existente.')
+      else: 
+        print('Coluna não existente.')
 
 
 def main():
