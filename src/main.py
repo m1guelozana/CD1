@@ -3,7 +3,7 @@ import pandas as pd
 import time
 import pyautogui
 import requests
-from onpenpyxl import Workbook
+from openpyxl import Workbook
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -40,7 +40,7 @@ def workbook_reading():
     if 'Número do Processo' in df.columns:
       numero_processos = df.loc[df['Número do Processo'] == 'Número do Processo']
       url = 'https://kroton.elaw.com.br/processoView.elaw'
-      for row in worksheet.iter_rows(min_row=2, values_only=True):
+      for row in df.iter_rows(min_row=2, values_only=True):
           try:
               print(f"Processo: {numero_processo}")
               campo_busca = dr.driver.find_element(
