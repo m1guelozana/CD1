@@ -159,7 +159,6 @@ class ProcessAutomation:
                             dr.driver.find_element(
                                 By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
                             ).send_keys('Acompanhamento')
-                            time.sleep(0.5)
                             self.payautogui.press('enter')
                             time.sleep(3)
                             self.pyautogui.press('tab')
@@ -208,7 +207,7 @@ class ProcessAutomation:
 
                                 # Salvar o novo arquivo Excel
                                 new_workbook.save(new_file_path)
-                                print('Última linha removida e novo arquivo Excel criado com sucesso.')
+                                
                 except Exception as e:
                     print(f"Erro ao processar o número de processo: {numero_processos}")
                     print(f"Mensagem de erro: {str(e)}")
