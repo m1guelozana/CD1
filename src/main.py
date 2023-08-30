@@ -145,6 +145,70 @@ class ProcessAutomation:
                           )))
                           bttnclick.click()
                           pass
+                    elif tipo_processo == 'Petições Diversas':
+                        try: 
+                            dr.driver.find_element(
+                                By.XPATH, ' //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
+                              ).click()
+                            wait = WebDriverWait(dr.driver, 10)
+                            element = wait.until(EC.presence_of_element_located((
+                                By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
+                            )))
+                            element.click()
+                            
+                            dr.driver.find_element(
+                                By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
+                            ).send_keys('Acompanhamento')
+                            time.sleep(0.5)
+                            self.payautogui.press('enter')
+                            time.sleep(3)
+                            self.pyautogui.press('tab')
+                            time.sleep(5)
+
+                            tipo_entrada = self.df.loc[self.df['Ação']]
+                            wait = WebDriverWait(dr.driver, 10)
+                            text = wait.until(EC.presence_of_element_located((
+                                By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
+                            )))
+                            text.send_keys('Petições Diversas', Keys.ARROW_DOWN)
+                            time.sleep(0.5)
+                            self.pyautogui.press('enter')
+                            time.sleep(5)
+
+                            dr.driver.find_element(
+                                By.XPATH, "//span[contains(@id,'label')]"
+                            ).click()
+                            nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos']
+
+                            time.sleep(2)
+
+                            self.pyautogui.write(nome_arquivo)
+                            time.sleep(5)
+                            self.pyautogui.sleep('enter')
+                            time.sleep(7)
+
+                            waitonclick = WebDriverWait(dr.driver, 20)
+                            bttnclick = waitonclick.until(EC.presence_of_element_located((
+                                By.XPATH, "//button[contains(@id,'btnVoltar')]"
+                            )))
+                            bttnclick.click()
+
+                        except Exception as e:
+                            print(f"Error message: {e}")
+                            file_path = 'Pasta1.xlsx'
+                            self.df = pd.read_excel(file_path)
+                            self.df = self.df.iloc[:-1]
+                            
+                            new_file_path = r'C:\Users\miguel.silva\Python\CD'
+                            new_workbook = Workbook()
+                            new_sheet = new_workbook.active
+
+                            for _, row in self.df.iterrows():
+                                new_sheet.append(row)
+
+                                # Salvar o novo arquivo Excel
+                                new_workbook.save(new_file_path)
+                                print('Última linha removida e novo arquivo Excel criado com sucesso.')
                 except Exception as e:
                     print(f"Erro ao processar o número de processo: {numero_processos}")
                     print(f"Mensagem de erro: {str(e)}")
