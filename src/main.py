@@ -38,9 +38,9 @@ def workbook_reading():
     # Função para leitura da tabela, percorrendo os números de processo
     df = pd.read_excel('Pasta1.xlsx')
     if 'Número do Processo' in df.columns:
-      numero_processos = df.loc[df['Número do Processo'] == 'Número do Processo']
+      numero_processos = df.loc[df['Número do Processo'] == 'Número do Processo'].iloc[1:]
       url = 'https://kroton.elaw.com.br/processoView.elaw'
-      for row in df.iter_rows(min_row=2, values_only=True):
+      for row in df.iloc[1:].iterrows():
           try:
               print(f"Processo: {numero_processos}")
               campo_busca = dr.driver.find_element(
