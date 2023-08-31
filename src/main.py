@@ -164,24 +164,35 @@ class ProcessAutomation:
                               pyautogui.press('tab')
                               time.sleep(5)
 
-                              tipo_entrada = self.df.loc[self.df['Ação']]
+                              tipo_entrada = self.df.loc[self.df['Observação Tramitação'] == 'Observação Tramitação'].iloc[1:]
                               wait = WebDriverWait(dr.driver, 10)
                               text = wait.until(EC.presence_of_element_located((
                                   By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
                               )))
-                              text.send_keys('Petições Diversas', Keys.ARROW_DOWN)
+                              text.send_keys(str(row['Observação Tramitação']))
+                              time.sleep(1)
+                              
+                              wait = WebDriverWait(dr.driver, 10)
+                              elemento = wait.until(EC.presence_of_element_located((
+                                By.XPATH, '''
+                                //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                                '''
+                            )))
+                              elemento.click()
+                              
+                              dr.driver.find_element(
+                                By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
+                              ).send_keys(str(row['Evento']))
                               time.sleep(0.5)
                               pyautogui.press('enter')
-                              time.sleep(5)
-
+                              
+                              
                               dr.driver.find_element(
                                   By.XPATH, "//span[contains(@id,'label')]"
                               ).click()
-                              nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos', 'Documentos']
-
+                              nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
                               time.sleep(2)
-
-                              pyautogui.write(nome_arquivo)
+                              pyautogui.write(str(row['Documentos']))
                               time.sleep(0.5)
                               pyautogui.press('enter')
                               time.sleep(3)
@@ -193,7 +204,7 @@ class ProcessAutomation:
                               bttnclick.click()
 
                           except Exception as e:
-                              print(f"Error message: {e}")
+                              # print(f"Error message: {e}")
                               file_path = 'Pasta1.xlsx'
                               self.df = pd.read_excel(file_path)
                               self.df = self.df.iloc[:-1]
@@ -209,7 +220,7 @@ class ProcessAutomation:
                                   
                   except Exception as e:
                       print(f"Erro ao processar o número de processo: {numero_processos}")
-                      print(f"Mensagem de erro: {str(e)}")
+                      # print(f"Mensagem de erro: {str(e)}")
                       break
               else: 
                   print('Coluna não existente.')
