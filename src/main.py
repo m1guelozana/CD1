@@ -182,9 +182,9 @@ class ProcessAutomation:
                             time.sleep(2)
 
                             self.pyautogui.write(nome_arquivo)
-                            time.sleep(5)
-                            self.pyautogui.sleep('enter')
-                            time.sleep(7)
+                            time.sleep(0.5)
+                            self.pyautogui.press('enter')
+                            time.sleep(3)
 
                             waitonclick = WebDriverWait(dr.driver, 20)
                             bttnclick = waitonclick.until(EC.presence_of_element_located((
