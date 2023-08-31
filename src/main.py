@@ -180,9 +180,10 @@ class ProcessAutomation:
                             )))
                               elemento.click()
                               
-                              dr.driver.find_element(
+                              waitertowrite = WebDriverWait(dr.driver, 20)
+                              elementcick = wait.until(EC.presence_of_element_located((
                                 By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
-                              ).send_keys(str(row['Evento']))
+                              ))).send_keys(str(row['Evento']))
                               time.sleep(0.5)
                               pyautogui.press('enter')
                               
