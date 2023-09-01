@@ -123,7 +123,8 @@ class ProcessAutomation:
                                 //span[contains(@id,'label')]
                                 '''
                             ).click()
-                            self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
+                            
+                            self.df.loc[self.df['Documentos'] == 'Documentos']
                             time.sleep(2)
                             pyautogui.write(str(row['Documentos']))
                             time.sleep(5)
