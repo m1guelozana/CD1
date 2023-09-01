@@ -246,15 +246,19 @@ class ProcessAutomation:
                 
                 
                 dr.driver.find_element(
-                    By.XPATH, "//span[contains(@id,'label')]"
+                    By.XPATH, '''
+                    //span[contains(@id,'label')]
+                    '''
                 ).click()
-                
-                self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
+                nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
+                pyautogui.write(nome_arquivo)
                 time.sleep(2)
-                pyautogui.write(str(row['Documentos']))
-                time.sleep(0.5)
                 pyautogui.press('enter')
-                time.sleep(3)
+                time.sleep(5)
+
+                dr.driver.find_element(
+                    By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                ).click()
 
                 waitonclick = WebDriverWait(dr.driver, 20)
                 bttnclick = waitonclick.until(EC.presence_of_element_located((
