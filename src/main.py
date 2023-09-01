@@ -250,9 +250,9 @@ class ProcessAutomation:
                     //span[contains(@id,'label')]
                     '''
                 ).click()
-                nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
-                pyautogui.write(nome_arquivo)
-                time.sleep(2)
+
+                self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
+                pyautogui.write((str(row['Documentos'])))
                 pyautogui.press('enter')
                 time.sleep(5)
 
