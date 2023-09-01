@@ -252,7 +252,7 @@ class ProcessAutomation:
                     //span[contains(@id,'label')]
                     '''
                 )))
-                elemento_upload.send_keys(str(row['Documentos']))
+                elemento_upload.send_keys(row['Documentos'])
                 pyautogui.press('enter')
 
                 dr.driver.find_element(
