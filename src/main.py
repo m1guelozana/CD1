@@ -245,17 +245,13 @@ class ProcessAutomation:
                 time.sleep(0.5)
                 pyautogui.press('enter')
                 
-                
-                dr.driver.find_element(
+                self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
+                elemento_upload = dr.driver.find_element(
                     By.XPATH, '''
                     //span[contains(@id,'label')]
                     '''
-                ).click()
-
-                self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
-                pyautogui.write((str(row['Documentos'])))
-                pyautogui.press('enter')
-                time.sleep(5)
+                )
+                elemento_upload.send_keys(str(row['Documentos']))
 
                 dr.driver.find_element(
                     By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
