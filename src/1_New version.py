@@ -41,10 +41,27 @@ class ProcessAutomation:
         except Exception as e:
             print(f"Erro ao clicar no elemento de menu: {str(e)}")
 
+    def verify_process_number(self):
+        try:
+            xpath = f'//td[label[text()="Numero: {numero_processo}"]]'
+            td_label = driver.find_element(By.XPATH, xpath)
+            
+            if td_label:
+                print(f'TD encontrada para o processo: {numero_processo}')
+                texto_td = td_label.text
+                print(f'Texto dentro da TD: {texto_td}')
+                
+                button_td = wait.until(EC.presence_of_element((By.XPATH, '//*[@id="tabViewProcesso:recursoTree:3:j_id_i3_4_1_3_8t:j_id_i3_4_1_3_8x_1"]')))
+                button_td.click()
+                
+                process_row()
+            else:
+                print(f'TD não encontrada para o processo: {numero_processo}')
+                
+        except Exception as e:
+            print(f"Error message: {e}")
 
     def process_row(self):
-        
-        
         if 'Número do Processo' in self.df.columns.astype(str):
             numero_processos = self.df.loc[self.df['Número do Processo'] == 'Número do Processo'].iloc[1:]
             
@@ -669,7 +686,6 @@ class ProcessAutomation:
                     
             return        
                 
-
    
     def run(self):
         while True:
