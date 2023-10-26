@@ -8,6 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from utils.webdriver_chrome import webDriver_chrome
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
+
 
 # Inicializar o driver do navegador
 dr = webDriver_chrome()
@@ -41,25 +43,622 @@ class ProcessAutomation:
         except Exception as e:
             print(f"Erro ao clicar no elemento de menu: {str(e)}")
 
-    def verify_process_number(self):
+    def each_process_have_attributes(self):
+        tipo_processo = row['Evento']
+        if tipo_processo == 'Inicial':  
+            try:
+                dr.driver.find_element(
+                    By.XPATH, '''
+                    //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
+                    '''
+                ).click()
+
+                wait = WebDriverWait(dr.driver, 10)
+                element = wait.until(EC.presence_of_element_located((
+                    By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]')
+                ))
+                element.click()
+
+                dr.driver.find_element(
+                    By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
+                ).send_keys('Acompanhamento')
+                time.sleep(0.5)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.press('tab')
+                time.sleep(5)
+
+                wait = WebDriverWait(dr.driver, 10)
+                text = wait.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]
+                    '''
+                )))
+                text.send_keys('Cópia Inicial')
+                time.sleep(0.5)
+                pyautogui.press('enter')
+                time.sleep(5)
+
+                wait = WebDriverWait(dr.driver, 10)
+                elemento = wait.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                    '''
+                )))
+                elemento.click()
+
+                dr.driver.find_element(
+                    By.XPATH, '''
+                    //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
+                    '''
+                ).send_keys('Inicial', Keys.ARROW_DOWN, Keys.ARROW_DOWN)
+                time.sleep(0.5)
+                pyautogui.press('enter')
+                time.sleep(5)
+
+
+                dr.driver.find_element(
+                    By.XPATH, '''
+                    //span[contains(@id,'label')]
+                    '''
+                ).click()
+
+                
+                # elementar = wait.until(EC.presence_of_element_located((
+                # By.XPATH, '''
+                # //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                # '''
+                # )))
+                # elementar.click()
+                
+                
+                # elementwrite = wait.until(EC.presence_of_element_located((
+                # By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
+                # )))
+                # elementwrite.send_keys(str(row['Evento']))
+                # time.sleep(0.5)
+                # pyautogui.press('enter')
+                # time.sleep(5)
+                
+                
+                                            
+
+                # nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
+                time.sleep(4)
+                pyautogui.hotkey('alt', 'n')
+                time.sleep(0.5)
+                pyautogui.write(str(row["Documentos"]))
+                time.sleep(0.5)
+                pyautogui.hotkey('alt', 'a')
+                time.sleep(7)
+
+                dr.driver.find_element(
+                By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                ).click()
+                time.sleep(7)
+                waitoclick = WebDriverWait(dr.driver, 20)
+                bttnclick = waitoclick.until(EC.presence_of_element_located((
+                By.XPATH, '''
+                //*[@id="btnVoltar"]/span[1]
+                '''
+                )))
+                bttnclick.click()                            
+                time.sleep(7)
+                
+
+
+                # nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos', 'Documentos']
+
+                # time.sleep(2)
+
+                # pyautogui.write(str(row['Documentos']))
+                # time.sleep(5)
+                # pyautogui.press('enter')
+                # time.sleep(7)
+
+                # dr.driver.find_element(
+                # By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                # ).click()
+                # time.sleep(7)
+                # waitoclick = WebDriverWait(dr.driver, 20)
+                # bttnclick = waitoclick.until(EC.presence_of_element_located((
+                # By.XPATH, '''
+                # //*[@id="btnVoltar"]/span[1]
+                # '''
+                # )))
+                # bttnclick.click()                            
+                # time.sleep(7)
+            except Exception as e:
+                # Este bloco será executado se ocorrer algum erro durante a busca ou clique
+                print(f"Erro ao processar o número de processo: {numero_processo}")
+                print(f"Mensagem de erro: {str(e)}")
+                dr.driver.find_element(By.XPATH, '''
+                    //button[contains(@id,'btnVoltar')]
+                ''').click()
+                dr.driver.find_element(
+                    By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+                ).clear()
+                pass
+            
+            
+            # inicial:
+            #     print("Cópia Inicial encontrada na página.")
+            #     dr.driver.find_element(By.XPATH, '''
+            #         //button[contains(@id,'btnVoltar')]
+            #     ''').click()
+            #     dr.driver.find_element(
+            #         By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+            #     ).clear()
+                
+            # else:
+                
+        elif tipo_processo == 'Petições Diversas':
+            try:
+                busca = dr.driver.find_element(
+                By.XPATH, ' //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
+                )
+                busca.click()
+                wait = WebDriverWait(dr.driver, 10)
+                element = wait.until(EC.presence_of_element_located((
+                By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
+                )))
+                element.click()
+                
+                dr.driver.find_element(
+                    By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
+                ).send_keys('Acompanhamento')                        
+                time.sleep(3)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.press('tab')
+                time.sleep(5)
+
+                tipo_entrada = self.df.loc[self.df['Observação Tramitação'] == 'Observação Tramitação'].iloc[1:]
+                wait = WebDriverWait(dr.driver, 10)
+                text = wait.until(EC.presence_of_element_located((
+                    By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
+                )))
+                text.send_keys(str(row['Observação Tramitação']))
+                time.sleep(5)
+                pyautogui.press('tab')
+                time.sleep(5)                     
+
+                # Verifica se a coluna "Documentos" não está vazia
+                if not pd.isna(row['Documentos']) and row['Documentos'] != '':                                                        
+                    elementar = wait.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                    '''
+                    )))
+                    elementar.click()
+                    
+                    
+                    elementwrite = wait.until(EC.presence_of_element_located((
+                    By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
+                    )))
+                    elementwrite.send_keys(str(row['Evento']))
+                    time.sleep(0.5)
+                    pyautogui.press('enter')
+                    time.sleep(5)
+                    
+                    
+                    dr.driver.find_element(
+                        By.XPATH, "//span[contains(@id,'label')]"
+                    ).click()
+                    
+                    nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
+                    time.sleep(4)
+                    pyautogui.write(str(row['Documentos']))
+                    time.sleep(0.5)
+                    pyautogui.hotkey('alt', 'a')
+                    time.sleep(7)
+
+                    dr.driver.find_element(
+                    By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                    ).click()
+                    time.sleep(7)
+                    waitoclick = WebDriverWait(dr.driver, 20)
+                    bttnclick = waitoclick.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //*[@id="btnVoltar"]/span[1]
+                    '''
+                    )))
+                    bttnclick.click()                            
+                    time.sleep(7)
+                else:
+                    dr.driver.find_element(
+                    By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                    ).click()
+                    time.sleep(7)
+                    waitoclick = WebDriverWait(dr.driver, 20)
+                    bttnclick = waitoclick.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //*[@id="btnVoltar"]/span[1]
+                    '''
+                        )))
+                    bttnclick.click()                            
+                    time.sleep(7)
+                    pass  
+
+            except Exception as e:
+                # Este bloco será executado se ocorrer algum erro durante a busca ou clique
+                print(f"Erro ao processar o número de processo: {numero_processo}")
+                print(f"Mensagem de erro: {str(e)}")
+                dr.driver.find_element(By.XPATH, '''
+                    //button[contains(@id,'btnVoltar')]
+                ''').click()
+                dr.driver.find_element(
+                    By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+                ).clear()
+                pass
+        elif tipo_processo == 'Contestação':
+            try:
+                busca = dr.driver.find_element(
+                By.XPATH, ' //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
+                )
+                busca.click()
+                wait = WebDriverWait(dr.driver, 10)
+                element = wait.until(EC.presence_of_element_located((
+                By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
+                )))
+                element.click()
+                
+                dr.driver.find_element(
+                    By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
+                ).send_keys('Acompanhamento')                        
+                time.sleep(3)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.press('tab')
+                time.sleep(5)
+
+                tipo_entrada = self.df.loc[self.df['Observação Tramitação'] == 'Observação Tramitação'].iloc[1:]
+                wait = WebDriverWait(dr.driver, 10)
+                text = wait.until(EC.presence_of_element_located((
+                    By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
+                )))
+                text.send_keys(str(row['Observação Tramitação']))
+                time.sleep(5)
+                pyautogui.press('tab')
+                time.sleep(5)
+                
+
+                # Verifica se a coluna "Documentos" não está vazia
+                if not pd.isna(row['Documentos']) and row['Documentos'] != '':                                                        
+                    elementar = wait.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                    '''
+                    )))
+                    elementar.click()
+                    
+                    
+                    elementwrite = wait.until(EC.presence_of_element_located((
+                    By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
+                    )))
+                    elementwrite.send_keys(str(row['Evento']))
+                    time.sleep(0.5)
+                    pyautogui.press('enter')
+                    time.sleep(5)
+                    
+                    
+                    dr.driver.find_element(
+                        By.XPATH, "//span[contains(@id,'label')]"
+                    ).click()
+                    
+                    nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
+                    time.sleep(4)
+                    pyautogui.write(str(row['Documentos']))
+                    time.sleep(0.5)
+                    pyautogui.hotkey('alt', 'a')
+                    time.sleep(7)
+
+                    dr.driver.find_element(
+                    By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                    ).click()
+                    time.sleep(7)
+                    waitoclick = WebDriverWait(dr.driver, 20)
+                    bttnclick = waitoclick.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //*[@id="btnVoltar"]/span[1]
+                    '''
+                        )))
+                    bttnclick.click()                            
+                    time.sleep(7) 
+                else:
+                    dr.driver.find_element(
+                    By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                    ).click()
+                    time.sleep(7)
+                    waitoclick = WebDriverWait(dr.driver, 20)
+                    bttnclick = waitoclick.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //*[@id="btnVoltar"]/span[1]
+                    '''
+                        )))
+                    bttnclick.click()                            
+                    time.sleep(7)
+                    pass      
+
+            except Exception as e:
+                # Este bloco será executado se ocorrer algum erro durante a busca ou clique
+                print(f"Erro ao processar o número de processo: {numero_processo}")
+                print(f"Mensagem de erro: {str(e)}")
+                dr.driver.find_element(By.XPATH, '''
+                    //button[contains(@id,'btnVoltar')]
+                ''').click()
+                dr.driver.find_element(
+                    By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+                ).clear()
+                pass               
+        
+        elif tipo_processo == 'Entregar ata da audiência e Prazos':
+            try:
+                busca = dr.driver.find_element(
+                By.XPATH, ' //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
+                )
+                busca.click()
+                wait = WebDriverWait(dr.driver, 10)
+                element = wait.until(EC.presence_of_element_located((
+                By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
+                )))
+                element.click()
+                
+                dr.driver.find_element(
+                    By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
+                ).send_keys('Audiência Realizada')                        
+                time.sleep(3)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.press('tab')
+                time.sleep(5)
+
+                tipo_entrada = self.df.loc[self.df['Observação Tramitação'] == 'Observação Tramitação'].iloc[1:]
+                wait = WebDriverWait(dr.driver, 10)
+                text = wait.until(EC.presence_of_element_located((
+                    By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
+                )))
+                text.send_keys(str(row['Observação Tramitação']))
+                time.sleep(5)
+                pyautogui.press('tab')
+                time.sleep(5)
+                
+
+
+
+                # Verifica se a coluna "Documentos" não está vazia
+                if not pd.isna(row['Documentos']) and row['Documentos'] != '':
+                                            
+                    elementar = wait.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                    '''
+                    )))
+                    elementar.click()
+                    
+                    
+                    elementwrite = wait.until(EC.presence_of_element_located((
+                    By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
+                    )))
+                    elementwrite.send_keys('Ata de Audiência')
+                    time.sleep(0.5)
+                    pyautogui.press('enter')
+                    time.sleep(5)
+                    
+                    
+                    dr.driver.find_element(
+                        By.XPATH, "//span[contains(@id,'label')]"
+                    ).click()
+                    
+                    nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
+                    time.sleep(4)
+                    pyautogui.write(str(row['Documentos']))
+                    time.sleep(0.5)
+                    pyautogui.hotkey('alt', 'a')
+                    time.sleep(7)
+
+                    dr.driver.find_element(
+                    By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                    ).click()
+                    time.sleep(7)
+                    waitoclick = WebDriverWait(dr.driver, 20)
+                    bttnclick = waitoclick.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //*[@id="btnVoltar"]/span[1]
+                    '''
+                        )))
+                    bttnclick.click()                            
+                    time.sleep(7)
+                else:
+                    dr.driver.find_element(
+                    By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                    ).click()
+                    time.sleep(7)
+                    waitoclick = WebDriverWait(dr.driver, 20)
+                    bttnclick = waitoclick.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //*[@id="btnVoltar"]/span[1]
+                    '''
+                        )))
+                    bttnclick.click()                            
+                    time.sleep(7)
+                    pass       
+
+            except Exception as e:
+                # Este bloco será executado se ocorrer algum erro durante a busca ou clique
+                print(f"Erro ao processar o número de processo: {numero_processo}")
+                print(f"Mensagem de erro: {str(e)}")
+                dr.driver.find_element(By.XPATH, '''
+                    //button[contains(@id,'btnVoltar')]
+                ''').click()
+                dr.driver.find_element(
+                    By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+                ).clear()
+                pass              
+        
+        elif tipo_processo == 'Documentos':
+            try:
+                busca = dr.driver.find_element(
+                By.XPATH, ' //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
+                )
+                busca.click()
+                wait = WebDriverWait(dr.driver, 10)
+                element = wait.until(EC.presence_of_element_located((
+                By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
+                )))
+                element.click()
+                
+                dr.driver.find_element(
+                    By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
+                ).send_keys('Acompanhamento')                        
+                time.sleep(3)
+                pyautogui.press('enter')
+                time.sleep(3)
+                pyautogui.press('tab')
+                time.sleep(5)
+                
+                wait = WebDriverWait(dr.driver, 10)
+                text = wait.until(EC.presence_of_element_located((
+                    By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
+                )))
+                print(tipo_entrada)
+                
+                linhas = tipo_entrada.split('\n')  # Divide o texto em várias linhas
+                    
+                    # Itera pelas linhas e envia uma de cada vez para o formulário do cliente
+                for linha in linhas:
+                    wait = WebDriverWait(dr.driver, 10)
+                    text = wait.until(EC.presence_of_element_located((
+                        By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
+                    )))
+                    
+                    print(linha)  # Exibe a linha que está sendo enviada
+                    pyautogui.press('down')
+                    text.send_keys(linha)                              
+                    
+                    time.sleep(2)
+
+                time.sleep(5)
+                pyautogui.press('tab')
+                time.sleep(5)
+                
+
+
+
+                # Verifica se a coluna "Documentos" não está vazia
+                if not pd.isna(row['Documentos']) and row['Documentos'] != '':
+                    
+                    elementar = wait.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
+                    '''
+                    )))
+                    elementar.click()
+                    
+                    
+                    elementwrite = wait.until(EC.presence_of_element_located((
+                    By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
+                    )))
+                    elementwrite.send_keys('Documentos')
+                    time.sleep(2)
+                    # Pressione a tecla para baixo cinco vezes
+                    pyautogui.press('down', presses=4)
+                    pyautogui.press('enter')
+                    time.sleep(5)
+                    
+                    
+                    dr.driver.find_element(
+                        By.XPATH, "//span[contains(@id,'label')]"
+                    ).click()
+                    
+                    nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
+                    time.sleep(4)
+                    pyautogui.write(str(row['Documentos']))
+                    time.sleep(0.5)
+                    pyautogui.hotkey('alt', 'a')
+                    time.sleep(7)
+
+                    dr.driver.find_element(
+                    By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                        ).click()
+
+                    time.sleep(7)
+                    waitoclick = WebDriverWait(dr.driver, 20)
+                    bttnclick = waitoclick.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //*[@id="btnVoltar"]/span[1]
+                    '''
+                        )))
+                    bttnclick.click()   
+
+
+
+                    # waitonclick = WebDriverWait(dr.driver, 20)
+                    # bttnclick = waitonclick.until(EC.presence_of_element_located((
+                    #     By.XPATH, "//button[contains(@id,'btnVoltar')]"
+                    # )))
+                    # bttnclick.click()
+                    time.sleep(7)  
+
+                else:
+                    dr.driver.find_element(
+                    By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
+                    ).click()
+                    time.sleep(7)
+                    waitoclick = WebDriverWait(dr.driver, 20)
+                    bttnclick = waitoclick.until(EC.presence_of_element_located((
+                    By.XPATH, '''
+                    //*[@id="btnVoltar"]/span[1]
+                    '''
+                        )))
+                    bttnclick.click()                            
+                    time.sleep(7)
+                    pass
+
+            except Exception as e:
+            # Este bloco será executado se ocorrer algum erro durante a busca ou clique
+                print(f"Erro ao processar o número de processo: {numero_processo}")
+                print(f"Mensagem de erro: {str(e)}")
+                dr.driver.find_element(By.XPATH, '''
+                    //button[contains(@id,'btnVoltar')]
+                ''').click()
+                dr.driver.find_element(
+                    By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
+                ).clear()
+                pass      
+                                  
+    def verify_process_number(self, numero_processo):
         try:
-            xpath = f'//td[label[text()="Numero: {numero_processo}"]]'
-            td_label = driver.find_element(By.XPATH, xpath)
+            xpath = f"//label[normalize-space(text()) = 'Numero: {numero_processo}']"
+
+            td_label = dr.driver.find_element(By.XPATH, xpath)
             
             if td_label:
                 print(f'TD encontrada para o processo: {numero_processo}')
                 texto_td = td_label.text
                 print(f'Texto dentro da TD: {texto_td}')
                 
-                button_td = wait.until(EC.presence_of_element((By.XPATH, '//*[@id="tabViewProcesso:recursoTree:3:j_id_i3_4_1_3_8t:j_id_i3_4_1_3_8x_1"]')))
-                button_td.click()
-                
-                process_row()
+                # Verificar se o número do processo na página é diferente do número na planilha
+                if texto_td == numero_processo:
+                    wait = WebDriverWait(dr.driver, 20)
+                    button_td = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="tabViewProcesso:recursoTree:3:j_id_i3_4_1_3_8t:j_id_i3_4_1_3_8x_1"]')))
+                    button_td.click()
+                    self.each_process_have_attributes()
+                    print(f'Clicando nos botões para o processo: {numero_processo}')
             else:
                 print(f'TD não encontrada para o processo: {numero_processo}')
                 
         except Exception as e:
             print(f"Error message: {e}")
+
+    def is_process_number_present(self, numero_processo):
+        xpath_is = f"//td[normalize-space(div/span)='{numero_processo}']"
+        try:
+            td_label_is = dr.driver.find_element(By.XPATH, xpath_is)
+            return True
+        except NoSuchElementException:
+            return False
+
 
     def process_row(self):
         if 'Número do Processo' in self.df.columns.astype(str):
@@ -78,596 +677,16 @@ class ProcessAutomation:
                     )
                     campo_busca.clear()
                     campo_busca.send_keys(str(numero_processo))
-
                     dr.driver.find_element(By.XPATH, '//*[@id="btnPesquisar"]').click()
-                    dr.driver.find_element(By.ID, 'dtProcessoResults:0:btnProcesso').click()
-                    
+                    if self.is_process_number_present(numero_processo) != numero_processo:
+                        bttn_proc = dr.driver.find_element(By.XPATH, '//*[@id="dtProcessoResults:0:btnProcesso"]')
+                        bttn_proc.click()
+                        self.verify_process_number(numero_processo)
+                    else:
+                        bttn_proc = dr.driver.find_element(By.XPATH, '//*[@id="dtProcessoResults:0:btnProcesso"]')
+                        bttn_proc.click()
+                        self.each_process_have_attributes(numero_processo)
 
-                    tipo_processo = row['Evento']
-                    if tipo_processo == 'Inicial':
-                        try:
-                            dr.driver.find_element(
-                                By.XPATH, '''
-                                //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]
-                                '''
-                            ).click()
-
-                            wait = WebDriverWait(dr.driver, 10)
-                            element = wait.until(EC.presence_of_element_located((
-                                By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]')
-                            ))
-                            element.click()
-
-                            dr.driver.find_element(
-                                By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
-                            ).send_keys('Acompanhamento')
-                            time.sleep(0.5)
-                            pyautogui.press('enter')
-                            time.sleep(3)
-                            pyautogui.press('tab')
-                            time.sleep(5)
-
-                            wait = WebDriverWait(dr.driver, 10)
-                            text = wait.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]
-                                '''
-                            )))
-                            text.send_keys('Cópia Inicial')
-                            time.sleep(0.5)
-                            pyautogui.press('enter')
-                            time.sleep(5)
-
-                            wait = WebDriverWait(dr.driver, 10)
-                            elemento = wait.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
-                                '''
-                            )))
-                            elemento.click()
-
-                            dr.driver.find_element(
-                                By.XPATH, '''
-                                //input[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter']
-                                '''
-                            ).send_keys('Inicial', Keys.ARROW_DOWN, Keys.ARROW_DOWN)
-                            time.sleep(0.5)
-                            pyautogui.press('enter')
-                            time.sleep(5)
-
-
-                            dr.driver.find_element(
-                                By.XPATH, '''
-                                //span[contains(@id,'label')]
-                                '''
-                            ).click()
-
-                           
-                            # elementar = wait.until(EC.presence_of_element_located((
-                            # By.XPATH, '''
-                            # //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
-                            # '''
-                            # )))
-                            # elementar.click()
-                            
-                            
-                            # elementwrite = wait.until(EC.presence_of_element_located((
-                            # By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
-                            # )))
-                            # elementwrite.send_keys(str(row['Evento']))
-                            # time.sleep(0.5)
-                            # pyautogui.press('enter')
-                            # time.sleep(5)
-                            
-                            
-                                                       
-
-                            # nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
-                            time.sleep(4)
-                            pyautogui.hotkey('alt', 'n')
-                            time.sleep(0.5)
-                            pyautogui.write(str(row["Documentos"]))
-                            time.sleep(0.5)
-                            pyautogui.hotkey('alt', 'a')
-                            time.sleep(7)
-
-                            dr.driver.find_element(
-                            By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                            ).click()
-                            time.sleep(7)
-                            waitoclick = WebDriverWait(dr.driver, 20)
-                            bttnclick = waitoclick.until(EC.presence_of_element_located((
-                            By.XPATH, '''
-                            //*[@id="btnVoltar"]/span[1]
-                            '''
-                            )))
-                            bttnclick.click()                            
-                            time.sleep(7)
-                            
-
-
-                            # nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos', 'Documentos']
-
-                            # time.sleep(2)
-
-                            # pyautogui.write(str(row['Documentos']))
-                            # time.sleep(5)
-                            # pyautogui.press('enter')
-                            # time.sleep(7)
-
-                            # dr.driver.find_element(
-                            # By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                            # ).click()
-                            # time.sleep(7)
-                            # waitoclick = WebDriverWait(dr.driver, 20)
-                            # bttnclick = waitoclick.until(EC.presence_of_element_located((
-                            # By.XPATH, '''
-                            # //*[@id="btnVoltar"]/span[1]
-                            # '''
-                            # )))
-                            # bttnclick.click()                            
-                            # time.sleep(7)
-                        except Exception as e:
-                            # Este bloco será executado se ocorrer algum erro durante a busca ou clique
-                            print(f"Erro ao processar o número de processo: {numero_processo}")
-                            print(f"Mensagem de erro: {str(e)}")
-                            dr.driver.find_element(By.XPATH, '''
-                                //button[contains(@id,'btnVoltar')]
-                            ''').click()
-                            dr.driver.find_element(
-                                By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
-                            ).clear()
-                            pass
-                        
-                        
-                        # inicial:
-                        #     print("Cópia Inicial encontrada na página.")
-                        #     dr.driver.find_element(By.XPATH, '''
-                        #         //button[contains(@id,'btnVoltar')]
-                        #     ''').click()
-                        #     dr.driver.find_element(
-                        #         By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
-                        #     ).clear()
-                            
-                        # else:
-                            
-                    elif tipo_processo == 'Petições Diversas':
-                        try:
-                            busca = dr.driver.find_element(
-                            By.XPATH, ' //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
-                            )
-                            busca.click()
-                            wait = WebDriverWait(dr.driver, 10)
-                            element = wait.until(EC.presence_of_element_located((
-                            By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
-                            )))
-                            element.click()
-                            
-                            dr.driver.find_element(
-                                By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
-                            ).send_keys('Acompanhamento')                        
-                            time.sleep(3)
-                            pyautogui.press('enter')
-                            time.sleep(3)
-                            pyautogui.press('tab')
-                            time.sleep(5)
-
-                            tipo_entrada = self.df.loc[self.df['Observação Tramitação'] == 'Observação Tramitação'].iloc[1:]
-                            wait = WebDriverWait(dr.driver, 10)
-                            text = wait.until(EC.presence_of_element_located((
-                                By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
-                            )))
-                            text.send_keys(str(row['Observação Tramitação']))
-                            time.sleep(5)
-                            pyautogui.press('tab')
-                            time.sleep(5)                     
-
-                            # Verifica se a coluna "Documentos" não está vazia
-                            if not pd.isna(row['Documentos']) and row['Documentos'] != '':                                                        
-                                elementar = wait.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
-                                '''
-                                )))
-                                elementar.click()
-                                
-                                
-                                elementwrite = wait.until(EC.presence_of_element_located((
-                                By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
-                                )))
-                                elementwrite.send_keys(str(row['Evento']))
-                                time.sleep(0.5)
-                                pyautogui.press('enter')
-                                time.sleep(5)
-                                
-                                
-                                dr.driver.find_element(
-                                    By.XPATH, "//span[contains(@id,'label')]"
-                                ).click()
-                                
-                                nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
-                                time.sleep(4)
-                                pyautogui.write(str(row['Documentos']))
-                                time.sleep(0.5)
-                                pyautogui.hotkey('alt', 'a')
-                                time.sleep(7)
-
-                                dr.driver.find_element(
-                                By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                                ).click()
-                                time.sleep(7)
-                                waitoclick = WebDriverWait(dr.driver, 20)
-                                bttnclick = waitoclick.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //*[@id="btnVoltar"]/span[1]
-                                '''
-                                )))
-                                bttnclick.click()                            
-                                time.sleep(7)
-                            else:
-                                dr.driver.find_element(
-                                By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                                ).click()
-                                time.sleep(7)
-                                waitoclick = WebDriverWait(dr.driver, 20)
-                                bttnclick = waitoclick.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //*[@id="btnVoltar"]/span[1]
-                                '''
-                                 )))
-                                bttnclick.click()                            
-                                time.sleep(7)
-                                pass  
-
-                        except Exception as e:
-                            # Este bloco será executado se ocorrer algum erro durante a busca ou clique
-                            print(f"Erro ao processar o número de processo: {numero_processo}")
-                            print(f"Mensagem de erro: {str(e)}")
-                            dr.driver.find_element(By.XPATH, '''
-                                //button[contains(@id,'btnVoltar')]
-                            ''').click()
-                            dr.driver.find_element(
-                                By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
-                            ).clear()
-                            pass
-                    elif tipo_processo == 'Contestação':
-                        try:
-                            busca = dr.driver.find_element(
-                            By.XPATH, ' //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
-                            )
-                            busca.click()
-                            wait = WebDriverWait(dr.driver, 10)
-                            element = wait.until(EC.presence_of_element_located((
-                            By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
-                            )))
-                            element.click()
-                            
-                            dr.driver.find_element(
-                                By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
-                            ).send_keys('Acompanhamento')                        
-                            time.sleep(3)
-                            pyautogui.press('enter')
-                            time.sleep(3)
-                            pyautogui.press('tab')
-                            time.sleep(5)
-
-                            tipo_entrada = self.df.loc[self.df['Observação Tramitação'] == 'Observação Tramitação'].iloc[1:]
-                            wait = WebDriverWait(dr.driver, 10)
-                            text = wait.until(EC.presence_of_element_located((
-                                By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
-                            )))
-                            text.send_keys(str(row['Observação Tramitação']))
-                            time.sleep(5)
-                            pyautogui.press('tab')
-                            time.sleep(5)
-                           
-
-                            # Verifica se a coluna "Documentos" não está vazia
-                            if not pd.isna(row['Documentos']) and row['Documentos'] != '':                                                        
-                                elementar = wait.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
-                                '''
-                                )))
-                                elementar.click()
-                                
-                                
-                                elementwrite = wait.until(EC.presence_of_element_located((
-                                By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
-                                )))
-                                elementwrite.send_keys(str(row['Evento']))
-                                time.sleep(0.5)
-                                pyautogui.press('enter')
-                                time.sleep(5)
-                                
-                                
-                                dr.driver.find_element(
-                                    By.XPATH, "//span[contains(@id,'label')]"
-                                ).click()
-                                
-                                nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
-                                time.sleep(4)
-                                pyautogui.write(str(row['Documentos']))
-                                time.sleep(0.5)
-                                pyautogui.hotkey('alt', 'a')
-                                time.sleep(7)
-
-                                dr.driver.find_element(
-                                By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                                ).click()
-                                time.sleep(7)
-                                waitoclick = WebDriverWait(dr.driver, 20)
-                                bttnclick = waitoclick.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //*[@id="btnVoltar"]/span[1]
-                                '''
-                                    )))
-                                bttnclick.click()                            
-                                time.sleep(7) 
-                            else:
-                                dr.driver.find_element(
-                                By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                                ).click()
-                                time.sleep(7)
-                                waitoclick = WebDriverWait(dr.driver, 20)
-                                bttnclick = waitoclick.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //*[@id="btnVoltar"]/span[1]
-                                '''
-                                 )))
-                                bttnclick.click()                            
-                                time.sleep(7)
-                                pass      
-
-                        except Exception as e:
-                            # Este bloco será executado se ocorrer algum erro durante a busca ou clique
-                            print(f"Erro ao processar o número de processo: {numero_processo}")
-                            print(f"Mensagem de erro: {str(e)}")
-                            dr.driver.find_element(By.XPATH, '''
-                                //button[contains(@id,'btnVoltar')]
-                            ''').click()
-                            dr.driver.find_element(
-                                By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
-                            ).clear()
-                            pass               
-                    
-                    elif tipo_processo == 'Entregar ata da audiência e Prazos':
-                        try:
-                            busca = dr.driver.find_element(
-                            By.XPATH, ' //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
-                            )
-                            busca.click()
-                            wait = WebDriverWait(dr.driver, 10)
-                            element = wait.until(EC.presence_of_element_located((
-                            By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
-                            )))
-                            element.click()
-                            
-                            dr.driver.find_element(
-                                By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
-                            ).send_keys('Audiência Realizada')                        
-                            time.sleep(3)
-                            pyautogui.press('enter')
-                            time.sleep(3)
-                            pyautogui.press('tab')
-                            time.sleep(5)
-
-                            tipo_entrada = self.df.loc[self.df['Observação Tramitação'] == 'Observação Tramitação'].iloc[1:]
-                            wait = WebDriverWait(dr.driver, 10)
-                            text = wait.until(EC.presence_of_element_located((
-                                By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
-                            )))
-                            text.send_keys(str(row['Observação Tramitação']))
-                            time.sleep(5)
-                            pyautogui.press('tab')
-                            time.sleep(5)
-                           
-
-
-
-                            # Verifica se a coluna "Documentos" não está vazia
-                            if not pd.isna(row['Documentos']) and row['Documentos'] != '':
-                                                        
-                                elementar = wait.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
-                                '''
-                                )))
-                                elementar.click()
-                                
-                                
-                                elementwrite = wait.until(EC.presence_of_element_located((
-                                By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
-                                )))
-                                elementwrite.send_keys('Ata de Audiência')
-                                time.sleep(0.5)
-                                pyautogui.press('enter')
-                                time.sleep(5)
-                                
-                                
-                                dr.driver.find_element(
-                                    By.XPATH, "//span[contains(@id,'label')]"
-                                ).click()
-                                
-                                nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
-                                time.sleep(4)
-                                pyautogui.write(str(row['Documentos']))
-                                time.sleep(0.5)
-                                pyautogui.hotkey('alt', 'a')
-                                time.sleep(7)
-
-                                dr.driver.find_element(
-                                By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                                ).click()
-                                time.sleep(7)
-                                waitoclick = WebDriverWait(dr.driver, 20)
-                                bttnclick = waitoclick.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //*[@id="btnVoltar"]/span[1]
-                                '''
-                                    )))
-                                bttnclick.click()                            
-                                time.sleep(7)
-                            else:
-                                dr.driver.find_element(
-                                By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                                ).click()
-                                time.sleep(7)
-                                waitoclick = WebDriverWait(dr.driver, 20)
-                                bttnclick = waitoclick.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //*[@id="btnVoltar"]/span[1]
-                                '''
-                                 )))
-                                bttnclick.click()                            
-                                time.sleep(7)
-                                pass       
-
-                        except Exception as e:
-                            # Este bloco será executado se ocorrer algum erro durante a busca ou clique
-                            print(f"Erro ao processar o número de processo: {numero_processo}")
-                            print(f"Mensagem de erro: {str(e)}")
-                            dr.driver.find_element(By.XPATH, '''
-                                //button[contains(@id,'btnVoltar')]
-                            ''').click()
-                            dr.driver.find_element(
-                                By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
-                            ).clear()
-                            pass              
-                    
-                    elif tipo_processo == 'Documentos':
-                        try:
-                            busca = dr.driver.find_element(
-                            By.XPATH, ' //*[@id="tabViewProcesso:j_id_i3_4_1_3_ac:j_id_i3_4_1_3_ag_1"]'
-                            )
-                            busca.click()
-                            wait = WebDriverWait(dr.driver, 10)
-                            element = wait.until(EC.presence_of_element_located((
-                            By.XPATH, '//*[@id="j_id_2n:j_id_2r_2_d_label"]'
-                            )))
-                            element.click()
-                            
-                            dr.driver.find_element(
-                                By.XPATH, "//input[@id='j_id_2n:j_id_2r_2_d_filter']"
-                            ).send_keys('Acompanhamento')                        
-                            time.sleep(3)
-                            pyautogui.press('enter')
-                            time.sleep(3)
-                            pyautogui.press('tab')
-                            time.sleep(5)
-                            
-                            wait = WebDriverWait(dr.driver, 10)
-                            text = wait.until(EC.presence_of_element_located((
-                                By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
-                            )))
-                            print(tipo_entrada)
-                            
-                            linhas = tipo_entrada.split('\n')  # Divide o texto em várias linhas
-                                
-                                # Itera pelas linhas e envia uma de cada vez para o formulário do cliente
-                            for linha in linhas:
-                                wait = WebDriverWait(dr.driver, 10)
-                                text = wait.until(EC.presence_of_element_located((
-                                    By.XPATH, "//textarea[contains(@id,'j_id_2n:txtOcorrenciaAndamento')]"
-                                )))
-                                
-                                print(linha)  # Exibe a linha que está sendo enviada
-                                pyautogui.press('down')
-                                text.send_keys(linha)                              
-                                
-                                time.sleep(2)
-
-                            time.sleep(5)
-                            pyautogui.press('tab')
-                            time.sleep(5)
-                           
-
-
-
-                            # Verifica se a coluna "Documentos" não está vazia
-                            if not pd.isna(row['Documentos']) and row['Documentos'] != '':
-                                
-                                elementar = wait.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //label[@id='j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_label']
-                                '''
-                                )))
-                                elementar.click()
-                                
-                                
-                                elementwrite = wait.until(EC.presence_of_element_located((
-                                By.XPATH, "//input[contains(@id,'j_id_2n:j_id_2r_2_5ni:eFileTipoCombo_filter')]"
-                                )))
-                                elementwrite.send_keys('Documentos')
-                                time.sleep(2)
-                                # Pressione a tecla para baixo cinco vezes
-                                pyautogui.press('down', presses=4)
-                                pyautogui.press('enter')
-                                time.sleep(5)
-                                
-                                
-                                dr.driver.find_element(
-                                    By.XPATH, "//span[contains(@id,'label')]"
-                                ).click()
-                                
-                                nome_arquivo = self.df.loc[self.df['Documentos'] == 'Documentos'].iloc[1:]
-                                time.sleep(4)
-                                pyautogui.write(str(row['Documentos']))
-                                time.sleep(0.5)
-                                pyautogui.hotkey('alt', 'a')
-                                time.sleep(7)
-
-                                dr.driver.find_element(
-                                By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                                 ).click()
-
-                                time.sleep(7)
-                                waitoclick = WebDriverWait(dr.driver, 20)
-                                bttnclick = waitoclick.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //*[@id="btnVoltar"]/span[1]
-                                '''
-                                 )))
-                                bttnclick.click()   
-
-
-
-                                # waitonclick = WebDriverWait(dr.driver, 20)
-                                # bttnclick = waitonclick.until(EC.presence_of_element_located((
-                                #     By.XPATH, "//button[contains(@id,'btnVoltar')]"
-                                # )))
-                                # bttnclick.click()
-                                time.sleep(7)  
-
-                            else:
-                                dr.driver.find_element(
-                                By.XPATH, '//*[@id="btnSalvarAndamentoProcesso"]'
-                                ).click()
-                                time.sleep(7)
-                                waitoclick = WebDriverWait(dr.driver, 20)
-                                bttnclick = waitoclick.until(EC.presence_of_element_located((
-                                By.XPATH, '''
-                                //*[@id="btnVoltar"]/span[1]
-                                '''
-                                 )))
-                                bttnclick.click()                            
-                                time.sleep(7)
-                                pass
-
-                        except Exception as e:
-                        # Este bloco será executado se ocorrer algum erro durante a busca ou clique
-                            print(f"Erro ao processar o número de processo: {numero_processo}")
-                            print(f"Mensagem de erro: {str(e)}")
-                            dr.driver.find_element(By.XPATH, '''
-                                //button[contains(@id,'btnVoltar')]
-                            ''').click()
-                            dr.driver.find_element(
-                                By.XPATH, '//*[@id="tabSearchTab:txtSearch"]'
-                            ).clear()
-                            pass      
-                                  
-                                   
-                    
                     # Exclua a linha no DataFrame original
                     self.df.drop(index, inplace=True)
                     time.sleep(5)
