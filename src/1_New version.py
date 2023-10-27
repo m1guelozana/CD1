@@ -43,7 +43,7 @@ class ProcessAutomation:
         except Exception as e:
             print(f"Erro ao clicar no elemento de menu: {str(e)}")
 
-    def each_process_have_attributes(self):
+    def each_process_have_attributes(self, row, numero_processo):
         tipo_processo = row['Evento']
         if tipo_processo == 'Inicial':  
             try:
