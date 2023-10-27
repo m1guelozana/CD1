@@ -629,7 +629,7 @@ class ProcessAutomation:
                                   
     def verify_process_number(self, numero_processo):
         try:
-            xpath = f"//label[normalize-space(text()) = 'Numero: {numero_processo}']"
+            xpath = f"(//td[contains(.,'Numero: {numero_processo}')])[2]"
 
             td_label = dr.driver.find_element(By.XPATH, xpath)
             
@@ -652,7 +652,7 @@ class ProcessAutomation:
             print(f"Error message: {e}")
 
     def is_process_number_present(self, numero_processo):
-        xpath_is = f"//td[normalize-space(div/span)='{numero_processo}']"
+        xpath_is = f"//td[@role='gridcell'][contains(.,'{numero_processo}')]"
         try:
             td_label_is = dr.driver.find_element(By.XPATH, xpath_is)
             return True
@@ -678,14 +678,19 @@ class ProcessAutomation:
                     campo_busca.clear()
                     campo_busca.send_keys(str(numero_processo))
                     dr.driver.find_element(By.XPATH, '//*[@id="btnPesquisar"]').click()
-                    if self.is_process_number_present(numero_processo) != numero_processo:
-                        bttn_proc = dr.driver.find_element(By.XPATH, '//*[@id="dtProcessoResults:0:btnProcesso"]')
-                        bttn_proc.click()
-                        self.verify_process_number(numero_processo)
-                    else:
+                    
+                    
+                    elemento_input = dr.driver.find_element(By.XPATH, '//*[@id="tabSearchTab:txtSearch"]')
+                    # Obter o valor do atributo 'value' do elemento
+                    valor_do_input = elemento_input.get_attribute("value")
+                    if self.is_process_number_present(numero_processo):
                         bttn_proc = dr.driver.find_element(By.XPATH, '//*[@id="dtProcessoResults:0:btnProcesso"]')
                         bttn_proc.click()
                         self.each_process_have_attributes(numero_processo)
+                    else:
+                        bttn_proc = dr.driver.find_element(By.XPATH, '//*[@id="dtProcessoResults:0:btnProcesso"]')
+                        bttn_proc.click()
+                        self.verify_process_number(numero_processo)
 
                     # Exclua a linha no DataFrame original
                     self.df.drop(index, inplace=True)
