@@ -18,8 +18,8 @@ class ProcessAutomation:
       def login(self):
           # Função para realizar o login
           dr.driver.get('https://kroton.elaw.com.br/login.elaw')
-          dr.driver.find_element(By.ID, 'username').send_keys('AMiceli2')
-          dr.driver.find_element(By.ID, 'password').send_keys('COGN@2023')
+          dr.driver.find_element(By.ID, 'username').send_keys('INSERTLOGIN')
+          dr.driver.find_element(By.ID, 'password').send_keys('INSERTPASS')
           dr.driver.find_element(By.XPATH, '//*[@id="j_id_a_1_5_f"]').click()
       
       def search(self):
